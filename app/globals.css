@@ -1,0 +1,224 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+/* 深色主题样式 */
+.dark {
+  color-scheme: dark;
+}
+
+/* 平滑主题切换动画 */
+* {
+  transition: background-color 0.2s ease-out, border-color 0.2s ease-out, color 0.2s ease-out;
+}
+
+/* 优化按钮主题切换 */
+button, a {
+  transition: background-color 0.15s ease-out, border-color 0.15s ease-out, color 0.15s ease-out, transform 0.3s ease-out, box-shadow 0.3s ease-out;
+}
+
+/* iOS风格液体动画效果 */
+@keyframes liquidRipple {
+  0% {
+    transform: scale(0);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.4;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+@keyframes liquidFlow {
+  0% {
+    transform: translateX(-100%) skewX(-15deg);
+  }
+  100% {
+    transform: translateX(100%) skewX(-15deg);
+  }
+}
+
+@keyframes liquidGlow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.6);
+  }
+}
+
+/* 液体波纹动画类 */
+.liquid-ripple {
+  animation: liquidRipple 0.6s ease-out;
+}
+
+/* 液体流动动画类 */
+.liquid-flow {
+  animation: liquidFlow 0.6s ease-out;
+}
+
+/* 液体发光效果 */
+.liquid-glow {
+  animation: liquidGlow 2s ease-in-out infinite;
+}
+
+/* 玻璃液态背景效果 */
+.glass-liquid {
+  backdrop-filter: blur(20px);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.05)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+/* 深色模式下的玻璃液态效果 */
+.dark .glass-liquid {
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.1),
+    rgba(0, 0, 0, 0.05)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 优化玻璃液态按钮的主题切换 */
+.glass-liquid {
+  transition: background-color 0.1s ease-out, border-color 0.1s ease-out, color 0.1s ease-out, transform 0.3s ease-out, box-shadow 0.3s ease-out !important;
+  will-change: transform, background-color, border-color;
+}
+
+/* 防止主题切换时的闪烁 */
+.glass-liquid * {
+  transition: color 0.1s ease-out !important;
+}
+
+/* 液体波纹点击效果 */
+@keyframes ripple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+.ripple-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.ripple-effect:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* 液体流动背景 */
+@keyframes liquidMove {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(0deg);
+  }
+  50% {
+    transform: translateX(100%) translateY(100%) rotate(180deg);
+  }
+  100% {
+    transform: translateX(-100%) translateY(-100%) rotate(360deg);
+  }
+}
+
+.liquid-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.liquid-bg::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.1) 50%,
+    transparent 70%
+  );
+  animation: liquidMove 8s linear infinite;
+  pointer-events: none;
+}
+
+/* 自定义滚动条样式 */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.5);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb {
+  background: rgba(75, 85, 99, 0.5);
+}
+
+.dark .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: rgba(75, 85, 99, 0.7);
+}
