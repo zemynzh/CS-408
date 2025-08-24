@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react'
 import { ChevronRight, ChevronDown, FileText, Folder, FolderOpen, Menu, Home, ChevronLeft, List, GitBranch, Network, Search, Cpu, HardDrive, Monitor, Database } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
 
 interface TreeNode {
   id: string
   title: string
   children?: TreeNode[]
   isOpen?: boolean
+  href?: string
 }
 
 interface ComputerOrganizationSidebarProps {
@@ -17,6 +19,8 @@ interface ComputerOrganizationSidebarProps {
 }
 
 export default function ComputerOrganizationSidebar({ className }: ComputerOrganizationSidebarProps) {
+  const router = useRouter()
+  const pathname = usePathname()
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set())
   const [activeNode, setActiveNode] = useState<string>('')
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -40,54 +44,50 @@ export default function ComputerOrganizationSidebar({ className }: ComputerOrgan
       if (savedCollapsed !== null) {
         setIsCollapsed(JSON.parse(savedCollapsed))
       }
-
-      // 检查当前路径，如果是练习页面主页，则不加载活动节点
-      const currentPath = window.location.pathname
-      if (currentPath === '/computer-organization/practice') {
-        // 在练习页面主页时，不选中任何节点
-        setActiveNode('')
-      } else {
-        // 在其他页面时，加载活动节点状态
-        const savedActiveNode = localStorage.getItem('computerOrganizationActiveNode')
-        if (savedActiveNode) {
-          setActiveNode(savedActiveNode)
-        }
-      }
     }
   }, [])
 
-  // 监听路径变化，当回到练习页面主页时清除选中状态
+  // 监听路径变化，更新活动节点状态
   useEffect(() => {
-    const handlePathChange = () => {
-      const currentPath = window.location.pathname
-      if (currentPath === '/computer-organization/practice') {
-        setActiveNode('')
+    // 根据当前路径设置活动节点
+    const pathToNodeMap: { [key: string]: string } = {
+      '/computer-organization/computer-development': 'computer-development',
+      '/computer-organization/computer-development/generations': 'generations',
+      '/computer-organization/computer-development/von-neumann': 'von-neumann',
+      '/computer-organization/computer-development/by-purpose': 'by-purpose',
+      '/computer-organization/computer-development/by-scale': 'by-scale',
+      '/computer-organization/practice': ''
+    }
+    
+    const nodeId = pathToNodeMap[pathname]
+    if (nodeId !== undefined) {
+      setActiveNode(nodeId)
+      // 保存到 localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('computerOrganizationActiveNode', nodeId)
+      }
+      
+      // 自动展开父节点
+      if (nodeId === 'generations' || nodeId === 'von-neumann' || nodeId === 'by-purpose' || nodeId === 'by-scale') {
+        setExpandedNodes(prevExpanded => {
+          const currentExpanded = new Set(prevExpanded)
+          if (!currentExpanded.has('computer-development')) {
+            currentExpanded.add('computer-development')
+            localStorage.setItem('computerOrganizationExpandedNodes', JSON.stringify(Array.from(currentExpanded)))
+          }
+          return currentExpanded
+        })
+      }
+    } else {
+      // 如果没有路径映射，则使用localStorage中的状态
+      const savedActiveNode = localStorage.getItem('computerOrganizationActiveNode')
+      if (savedActiveNode) {
+        setActiveNode(savedActiveNode)
       }
     }
+  }, [pathname])
 
-    // 监听 popstate 事件（浏览器前进后退）
-    window.addEventListener('popstate', handlePathChange)
-    
-    // 监听 pushstate 和 replacestate 事件
-    const originalPushState = history.pushState
-    const originalReplaceState = history.replaceState
-    
-    history.pushState = function(...args) {
-      originalPushState.apply(history, args)
-      handlePathChange()
-    }
-    
-    history.replaceState = function(...args) {
-      originalReplaceState.apply(history, args)
-      handlePathChange()
-    }
 
-    return () => {
-      window.removeEventListener('popstate', handlePathChange)
-      history.pushState = originalPushState
-      history.replaceState = originalReplaceState
-    }
-  }, [])
 
   const treeData: TreeNode[] = [
     {
@@ -98,16 +98,16 @@ export default function ComputerOrganizationSidebar({ className }: ComputerOrgan
           id: 'computer-development',
           title: '计算机发展历程',
           children: [
-            { id: 'generations', title: '计算机代际' },
-            { id: 'von-neumann', title: '冯·诺依曼体系结构' }
+            { id: 'generations', title: '计算机代际', href: '/computer-organization/computer-development/generations' },
+            { id: 'von-neumann', title: '冯·诺依曼体系结构', href: '/computer-organization/computer-development/von-neumann' }
           ]
         },
         {
           id: 'computer-classification',
           title: '计算机分类',
           children: [
-            { id: 'by-purpose', title: '按用途分类' },
-            { id: 'by-size', title: '按规模分类' }
+            { id: 'by-purpose', title: '按用途分类', href: '/computer-organization/computer-development/by-purpose' },
+            { id: 'by-scale', title: '按规模分类', href: '/computer-organization/computer-development/by-scale' }
           ]
         },
         {
@@ -343,13 +343,27 @@ export default function ComputerOrganizationSidebar({ className }: ComputerOrgan
     }
   }
 
-  const handleNodeClick = (nodeId: string) => {
+  const handleNodeClick = (nodeId: string, href?: string) => {
     setActiveNode(nodeId)
     // 保存到 localStorage
     if (typeof window !== 'undefined') {
       localStorage.setItem('computerOrganizationActiveNode', nodeId)
     }
-    // 这里可以添加路由跳转逻辑
+    
+    // 自动展开父节点
+    if (nodeId === 'generations' || nodeId === 'von-neumann' || nodeId === 'by-purpose' || nodeId === 'by-scale') {
+      const currentExpanded = new Set(expandedNodes)
+      if (!currentExpanded.has('computer-development')) {
+        currentExpanded.add('computer-development')
+        setExpandedNodes(currentExpanded)
+        localStorage.setItem('computerOrganizationExpandedNodes', JSON.stringify(Array.from(currentExpanded)))
+      }
+    }
+    
+    // 如果有href，使用 Next.js 路由进行客户端导航
+    if (href) {
+      router.push(href)
+    }
   }
 
   const toggleCollapse = () => {
@@ -389,7 +403,7 @@ export default function ComputerOrganizationSidebar({ className }: ComputerOrgan
             if (hasChildren) {
               toggleNode(node.id)
             } else {
-              handleNodeClick(node.id)
+              handleNodeClick(node.id, node.href)
             }
           }}
         >
@@ -564,3 +578,4 @@ export default function ComputerOrganizationSidebar({ className }: ComputerOrgan
     </div>
   )
 }
+

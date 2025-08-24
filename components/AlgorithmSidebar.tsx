@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react'
 import { ChevronRight, ChevronDown, FileText, Folder, FolderOpen, Menu, Home, ChevronLeft, List, GitBranch, Network, Search, Zap, Target, BarChart3 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
 
 interface TreeNode {
   id: string
   title: string
   children?: TreeNode[]
   isOpen?: boolean
+  href?: string
 }
 
 interface AlgorithmSidebarProps {
@@ -17,6 +19,8 @@ interface AlgorithmSidebarProps {
 }
 
 export default function AlgorithmSidebar({ className }: AlgorithmSidebarProps) {
+  const router = useRouter()
+  const pathname = usePathname()
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set())
   const [activeNode, setActiveNode] = useState<string>('')
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -40,54 +44,25 @@ export default function AlgorithmSidebar({ className }: AlgorithmSidebarProps) {
       if (savedCollapsed !== null) {
         setIsCollapsed(JSON.parse(savedCollapsed))
       }
-
-      // 检查当前路径，如果是算法可视化主页，则不加载活动节点
-      const currentPath = window.location.pathname
-      if (currentPath === '/algorithm') {
-        // 在算法可视化主页时，不选中任何节点
-        setActiveNode('')
-      } else {
-        // 在其他算法页面时，加载活动节点状态
-        const savedActiveNode = localStorage.getItem('algorithmActiveNode')
-        if (savedActiveNode) {
-          setActiveNode(savedActiveNode)
-        }
-      }
     }
   }, [])
 
-  // 监听路径变化，当回到算法可视化主页时清除选中状态
+  // 监听路径变化，更新活动节点状态
   useEffect(() => {
-    const handlePathChange = () => {
-      const currentPath = window.location.pathname
-      if (currentPath === '/algorithm') {
-        setActiveNode('')
+    // 检查当前路径，如果是算法可视化主页，则不选中任何节点
+    if (pathname === '/algorithm') {
+      // 在算法可视化主页时，不选中任何节点
+      setActiveNode('')
+    } else {
+      // 在其他算法页面时，根据当前路径设置活动节点
+      const savedActiveNode = localStorage.getItem('algorithmActiveNode')
+      if (savedActiveNode) {
+        setActiveNode(savedActiveNode)
       }
     }
+  }, [pathname])
 
-    // 监听 popstate 事件（浏览器前进后退）
-    window.addEventListener('popstate', handlePathChange)
-    
-    // 监听 pushstate 和 replacestate 事件
-    const originalPushState = history.pushState
-    const originalReplaceState = history.replaceState
-    
-    history.pushState = function(...args) {
-      originalPushState.apply(history, args)
-      handlePathChange()
-    }
-    
-    history.replaceState = function(...args) {
-      originalReplaceState.apply(history, args)
-      handlePathChange()
-    }
 
-    return () => {
-      window.removeEventListener('popstate', handlePathChange)
-      history.pushState = originalPushState
-      history.replaceState = originalReplaceState
-    }
-  }, [])
 
   const treeData: TreeNode[] = [
     {
@@ -269,46 +244,46 @@ export default function AlgorithmSidebar({ className }: AlgorithmSidebarProps) {
     // 路由跳转逻辑
     switch (nodeId) {
       case 'bubble-sort':
-        window.location.href = '/algorithm/visualizations/bubble-sort'
+        router.push('/algorithm/visualizations/bubble-sort')
         break
       case 'selection-sort':
-        window.location.href = '/algorithm/visualizations/selection-sort'
+        router.push('/algorithm/visualizations/selection-sort')
         break
       case 'insertion-sort':
-        window.location.href = '/algorithm/visualizations/insertion-sort'
+        router.push('/algorithm/visualizations/insertion-sort')
         break
       case 'quick-sort':
-        window.location.href = '/algorithm/visualizations/quick-sort'
+        router.push('/algorithm/visualizations/quick-sort')
         break
       case 'merge-sort':
-        window.location.href = '/algorithm/visualizations/merge-sort'
+        router.push('/algorithm/visualizations/merge-sort')
         break
       case 'heap-sort':
-        window.location.href = '/algorithm/visualizations/heap-sort'
+        router.push('/algorithm/visualizations/heap-sort')
         break
       case 'linear-search':
-        window.location.href = '/algorithm/visualizations/linear-search'
+        router.push('/algorithm/visualizations/linear-search')
         break
       case 'binary-search':
-        window.location.href = '/algorithm/visualizations/binary-search'
+        router.push('/algorithm/visualizations/binary-search')
         break
       case 'depth-first-search':
-        window.location.href = '/algorithm/visualizations/depth-first-search'
+        router.push('/algorithm/visualizations/depth-first-search')
         break
       case 'breadth-first-search':
-        window.location.href = '/algorithm/visualizations/breadth-first-search'
+        router.push('/algorithm/visualizations/breadth-first-search')
         break
       case 'factorial':
-        window.location.href = '/algorithm/visualizations/factorial'
+        router.push('/algorithm/visualizations/factorial')
         break
       case 'fibonacci':
-        window.location.href = '/algorithm/visualizations/fibonacci'
+        router.push('/algorithm/visualizations/fibonacci')
         break
       case 'tower-of-hanoi':
-        window.location.href = '/algorithm/visualizations/tower-of-hanoi'
+        router.push('/algorithm/visualizations/tower-of-hanoi')
         break
       case 'backtracking':
-        window.location.href = '/algorithm/visualizations/backtracking'
+        router.push('/algorithm/visualizations/backtracking')
         break
       // 可以继续添加其他算法的路由
       default:

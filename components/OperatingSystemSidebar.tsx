@@ -4,12 +4,14 @@ import { useState, useEffect } from 'react'
 import { ChevronRight, ChevronDown, FileText, Folder, FolderOpen, Menu, Home, ChevronLeft, List, GitBranch, Network, Search, Cpu, HardDrive, Monitor, Settings } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
+import { useRouter, usePathname } from 'next/navigation'
 
 interface TreeNode {
   id: string
   title: string
   children?: TreeNode[]
   isOpen?: boolean
+  href?: string
 }
 
 interface OperatingSystemSidebarProps {
@@ -17,6 +19,8 @@ interface OperatingSystemSidebarProps {
 }
 
 export default function OperatingSystemSidebar({ className }: OperatingSystemSidebarProps) {
+  const router = useRouter()
+  const pathname = usePathname()
   const [expandedNodes, setExpandedNodes] = useState<Set<string>>(new Set())
   const [activeNode, setActiveNode] = useState<string>('')
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -40,54 +44,25 @@ export default function OperatingSystemSidebar({ className }: OperatingSystemSid
       if (savedCollapsed !== null) {
         setIsCollapsed(JSON.parse(savedCollapsed))
       }
-
-      // 检查当前路径，如果是练习页面主页，则不加载活动节点
-      const currentPath = window.location.pathname
-      if (currentPath === '/operating-system/practice') {
-        // 在练习页面主页时，不选中任何节点
-        setActiveNode('')
-      } else {
-        // 在其他页面时，加载活动节点状态
-        const savedActiveNode = localStorage.getItem('operatingSystemActiveNode')
-        if (savedActiveNode) {
-          setActiveNode(savedActiveNode)
-        }
-      }
     }
   }, [])
 
-  // 监听路径变化，当回到练习页面主页时清除选中状态
+  // 监听路径变化，更新活动节点状态
   useEffect(() => {
-    const handlePathChange = () => {
-      const currentPath = window.location.pathname
-      if (currentPath === '/operating-system/practice') {
-        setActiveNode('')
+    // 检查当前路径，如果是练习页面主页，则不选中任何节点
+    if (pathname === '/operating-system/practice') {
+      // 在练习页面主页时，不选中任何节点
+      setActiveNode('')
+    } else {
+      // 在其他页面时，根据当前路径设置活动节点
+      const savedActiveNode = localStorage.getItem('operatingSystemActiveNode')
+      if (savedActiveNode) {
+        setActiveNode(savedActiveNode)
       }
     }
+  }, [pathname])
 
-    // 监听 popstate 事件（浏览器前进后退）
-    window.addEventListener('popstate', handlePathChange)
-    
-    // 监听 pushstate 和 replacestate 事件
-    const originalPushState = history.pushState
-    const originalReplaceState = history.replaceState
-    
-    history.pushState = function(...args) {
-      originalPushState.apply(history, args)
-      handlePathChange()
-    }
-    
-    history.replaceState = function(...args) {
-      originalReplaceState.apply(history, args)
-      handlePathChange()
-    }
 
-    return () => {
-      window.removeEventListener('popstate', handlePathChange)
-      history.pushState = originalPushState
-      history.replaceState = originalReplaceState
-    }
-  }, [])
 
   const treeData: TreeNode[] = [
     {
@@ -269,13 +244,16 @@ export default function OperatingSystemSidebar({ className }: OperatingSystemSid
     }
   }
 
-  const handleNodeClick = (nodeId: string) => {
+  const handleNodeClick = (nodeId: string, href?: string) => {
     setActiveNode(nodeId)
     // 保存到 localStorage
     if (typeof window !== 'undefined') {
       localStorage.setItem('operatingSystemActiveNode', nodeId)
     }
-    // 这里可以添加路由跳转逻辑
+    // 如果有href，使用 Next.js 路由进行客户端导航
+    if (href) {
+      router.push(href)
+    }
   }
 
   const toggleCollapse = () => {
@@ -315,7 +293,7 @@ export default function OperatingSystemSidebar({ className }: OperatingSystemSid
             if (hasChildren) {
               toggleNode(node.id)
             } else {
-              handleNodeClick(node.id)
+              handleNodeClick(node.id, node.href)
             }
           }}
         >
