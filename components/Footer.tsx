@@ -1,6 +1,6 @@
 'use client'
 
-import { GraduationCap, Mail, MessageSquare } from 'lucide-react'
+import { GraduationCap, Mail, MessageSquare, Github } from 'lucide-react'
 import Link from 'next/link'
 
 export default function Footer() {
@@ -24,7 +24,7 @@ export default function Footer() {
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">CS-408考研助手</span>
             </div>
             <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-              专为计算机考研学生打造的知识点可视化学习平台
+              专为计算机考研学生打造的知识点可视化学习平台，提供数据结构、算法、操作系统等核心科目的系统化学习。
             </p>
           </div>
 
@@ -98,14 +98,25 @@ export default function Footer() {
             </p>
             <div className="flex space-x-4">
               <a 
-                href="mailto:contact@cs408.com" 
+                href="mailto:zemynzh@gmail.com" 
                 className="glass-liquid w-12 h-12 bg-white/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-2xl flex items-center justify-center hover:scale-110 hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 group"
+                title="发送邮件"
               >
                 <Mail className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors" />
               </a>
               <a 
+                href="https://github.com/zemynzh" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-liquid w-12 h-12 bg-white/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-2xl flex items-center justify-center hover:scale-110 hover:shadow-lg hover:shadow-purple-500/25 transition-all duration-300 group"
+                title="GitHub主页"
+              >
+                <Github className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors" />
+              </a>
+              <a 
                 href="/contact" 
                 className="glass-liquid w-12 h-12 bg-white/80 dark:bg-gray-800/80 border border-gray-300/50 dark:border-gray-600/50 rounded-2xl flex items-center justify-center hover:scale-110 hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300 group"
+                title="联系我们"
               >
                 <MessageSquare className="w-5 h-5 text-gray-600 dark:text-gray-300 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors" />
               </a>

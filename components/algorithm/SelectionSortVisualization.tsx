@@ -18,7 +18,7 @@ export default function SelectionSortVisualization() {
   const [arraySize, setArraySize] = useState(10)
   const [comparisons, setComparisons] = useState(0)
   const [swaps, setSwaps] = useState(0)
-  const [showInfo, setShowInfo] = useState(false)
+  const [showInfo, setShowInfo] = useState(true)
   const [shouldStop, setShouldStop] = useState(false)
   const [isPaused, setIsPaused] = useState(false)
   const isPausedRef = useRef(false)
@@ -286,7 +286,7 @@ export default function SelectionSortVisualization() {
               </Link>
               <div>
                 <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
-                  选择排序可视化
+                  选择排序
                 </h1>
                 <p className="text-sm text-gray-600 dark:text-gray-400">
                   通过动画演示理解选择排序算法
@@ -380,7 +380,60 @@ export default function SelectionSortVisualization() {
                 </button>
               </div>
             </div>
+
+            {/* 算法说明 */}
+            {showInfo && (
+              <div className="glass-liquid bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-3xl p-8 border border-white/20 dark:border-gray-700/20 shadow-xl shadow-black/10 dark:shadow-black/30 mt-8">
+                <h3 className="text-xl font-semibold text-gray-800 dark:text-white mb-6 flex items-center">
+                  <Info className="w-6 h-6 mr-3 text-purple-600 dark:text-purple-400" />
+                  算法说明
+                </h3>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                  <div className="space-y-4 text-gray-600 dark:text-gray-400">
+                    <p className="leading-relaxed">
+                      选择排序是一种简单直观的排序算法，它的工作原理是每次从未排序区间选择最小的元素，
+                      放到已排序区间的末尾。
+                    </p>
+                    <p className="leading-relaxed">
+                      就像在超市排队结账时，我们总是选择队伍中最短的那一列。
+                      选择排序的核心思想就是"每次选择最好的"。
+                    </p>
+                    <p>
+                      <strong>特点：</strong>
+                    </p>
+                    <ul className="list-disc list-inside space-y-1 ml-4">
+                      <li>不稳定排序：相同元素的相对位置可能改变</li>
+                      <li>原地排序：不需要额外空间</li>
+                      <li>时间复杂度：O(n²)</li>
+                      <li>空间复杂度：O(1)</li>
+                    </ul>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <p>
+                      <strong>算法步骤：</strong>
+                    </p>
+                    <ol className="list-decimal list-inside space-y-2 ml-4 text-gray-600 dark:text-gray-400">
+                      <li>在未排序序列中找到最小元素</li>
+                      <li>将其与未排序序列的第一个元素交换位置</li>
+                      <li>将该元素划入已排序序列</li>
+                      <li>重复步骤1-3，直到所有元素排序完成</li>
+                    </ol>
+                    
+                    <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-200/30 dark:border-blue-700/30">
+                      <p className="text-sm text-blue-800 dark:text-blue-300">
+                        <strong>优化提示：</strong>选择排序的交换次数少于冒泡排序，
+                        但比较次数相同。对于小规模数据，选择排序是一个不错的选择。
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
+
+          {/* 控制面板 */}
 
           {/* 控制面板 */}
           <div className="space-y-6">
@@ -456,34 +509,35 @@ export default function SelectionSortVisualization() {
               </div>
             </div>
 
-            {/* 算法说明 */}
-            {showInfo && (
-              <div className="glass-liquid bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-3xl p-6 border border-white/20 dark:border-gray-700/20 shadow-xl shadow-black/10 dark:shadow-black/30">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
-                  <Info className="w-5 h-5 mr-2 text-purple-600 dark:text-purple-400" />
-                  算法说明
-                </h3>
-                
-                <div className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
-                  <p>
-                    选择排序是一种简单直观的排序算法，它的工作原理是每次从未排序区间选择最小的元素，
-                    放到已排序区间的末尾。
-                  </p>
-                  <p>
-                    <strong>算法步骤：</strong>
-                  </p>
-                  <ol className="list-decimal list-inside space-y-1 ml-2">
-                    <li>在未排序序列中找到最小元素</li>
-                    <li>将其与未排序序列的第一个元素交换位置</li>
-                    <li>将该元素划入已排序序列</li>
-                    <li>重复步骤1-3，直到所有元素排序完成</li>
-                  </ol>
-                  <p>
-                    <strong>特点：</strong>不稳定排序，原地排序，时间复杂度O(n²)，交换次数少于冒泡排序
-                  </p>
+            {/* 颜色说明 */}
+            <div className="glass-liquid bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl rounded-3xl p-6 border border-white/20 dark:border-gray-700/20 shadow-xl shadow-black/10 dark:shadow-black/30">
+              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center">
+                <div className="w-5 h-5 mr-2 rounded-full bg-gradient-to-r from-blue-400 to-purple-400 flex items-center justify-center">
+                  <div className="w-3 h-3 rounded-full bg-white"></div>
+                </div>
+                颜色说明
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <div className="w-4 h-4 rounded bg-blue-400 dark:bg-blue-500 shadow-md shadow-blue-500/30"></div>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">未处理的元素</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-4 h-4 rounded bg-yellow-400 dark:bg-yellow-500 shadow-lg shadow-yellow-500/50"></div>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">正在比较的元素</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-4 h-4 rounded bg-purple-400 dark:bg-purple-500 shadow-lg shadow-purple-500/50"></div>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">选中的最小元素</span>
+                </div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-4 h-4 rounded bg-green-400 dark:bg-green-500 shadow-lg shadow-green-500/50"></div>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">已排序的元素</span>
                 </div>
               </div>
-            )}
+            </div>
+
           </div>
         </div>
       </div>

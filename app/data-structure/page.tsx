@@ -162,140 +162,148 @@ export default function DataStructurePage() {
               </h2>
               <div className="space-y-6">
                 {/* 线性结构 */}
-                <div className="glass-liquid bg-gradient-to-r from-blue-50/50 to-cyan-50/50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl p-6 border border-blue-200/30 dark:border-blue-700/30">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">线性结构</h3>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">基础篇</span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">线性表：顺序表、链表</span>
+                <Link href="/data-structure/linear-structure">
+                  <div className="glass-liquid bg-gradient-to-r from-blue-50/50 to-cyan-50/50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl p-6 border border-blue-200/30 dark:border-blue-700/30 hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer group">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-xl font-semibold text-gray-800 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">线性结构</h3>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">基础篇</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">线性表：顺序表、链表</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">栈：栈的应用、表达式求值</span>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">栈：栈的应用、表达式求值</span>
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">队列：循环队列、优先队列</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">串：KMP算法、字符串匹配</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">队列：循环队列、优先队列</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">串：KMP算法、字符串匹配</span>
-                      </div>
-                    </div>
                   </div>
-                </div>
+                </Link>
 
                 {/* 树形结构 */}
-                <div className="glass-liquid bg-gradient-to-r from-green-50/50 to-emerald-50/50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 border border-green-200/30 dark:border-green-700/30">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">树形结构</h3>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">进阶篇</span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">二叉树：遍历、性质、存储</span>
+                <Link href="/data-structure/tree-structure">
+                  <div className="glass-liquid bg-gradient-to-r from-green-50/50 to-emerald-50/50 dark:from-green-900/20 dark:to-emerald-900/20 rounded-2xl p-6 border border-green-200/30 dark:border-green-700/30 hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 cursor-pointer group">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-xl font-semibold text-gray-800 dark:text-white group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors">树形结构</h3>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">进阶篇</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">二叉树：遍历、性质、存储</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">二叉搜索树：BST操作、平衡性</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">平衡树：AVL树、红黑树</span>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">二叉搜索树：BST操作、平衡性</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">平衡树：AVL树、红黑树</span>
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">堆：最大堆、最小堆、堆排序</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">哈夫曼树：哈夫曼编码、最优树</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">堆：最大堆、最小堆、堆排序</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">哈夫曼树：哈夫曼编码、最优树</span>
-                      </div>
-                    </div>
                   </div>
-                </div>
+                </Link>
 
                 {/* 图结构 */}
-                <div className="glass-liquid bg-gradient-to-r from-purple-50/50 to-pink-50/50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 border border-purple-200/30 dark:border-purple-700/30">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">图结构</h3>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">高级篇</span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">图的基本概念：图的表示、存储结构</span>
+                <Link href="/data-structure/graph-structure">
+                  <div className="glass-liquid bg-gradient-to-r from-purple-50/50 to-pink-50/50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 border border-purple-200/30 dark:border-purple-700/30 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 cursor-pointer group">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-xl font-semibold text-gray-800 dark:text-white group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors">图结构</h3>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">高级篇</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">图的基本概念：图的表示、存储结构</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">图的遍历：DFS、BFS算法</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">最短路径：Dijkstra、Floyd算法</span>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">图的遍历：DFS、BFS算法</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">最短路径：Dijkstra、Floyd算法</span>
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">最小生成树：Prim、Kruskal算法</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">拓扑排序：AOV网、关键路径</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">最小生成树：Prim、Kruskal算法</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">拓扑排序：AOV网、关键路径</span>
-                      </div>
-                    </div>
                   </div>
-                </div>
+                </Link>
 
                 {/* 查找与排序 */}
-                <div className="glass-liquid bg-gradient-to-r from-orange-50/50 to-red-50/50 dark:from-orange-900/20 dark:to-red-900/20 rounded-2xl p-6 border border-orange-200/30 dark:border-orange-700/30">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xl font-semibold text-gray-800 dark:text-white">查找与排序</h3>
-                    <span className="text-sm text-gray-500 dark:text-gray-400">应用篇</span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">顺序查找：线性查找、哨兵</span>
+                <Link href="/data-structure/search-sort">
+                  <div className="glass-liquid bg-gradient-to-r from-orange-50/50 to-red-50/50 dark:from-orange-900/20 dark:to-red-900/20 rounded-2xl p-6 border border-orange-200/30 dark:border-orange-700/30 hover:shadow-lg hover:shadow-orange-500/20 transition-all duration-300 cursor-pointer group">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-xl font-semibold text-gray-800 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">查找与排序</h3>
+                      <span className="text-sm text-gray-500 dark:text-gray-400">应用篇</span>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">顺序查找：线性查找、哨兵</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">二分查找：折半查找、插值查找</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">散列表：哈希函数、冲突处理</span>
+                        </div>
                       </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">二分查找：折半查找、插值查找</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">散列表：哈希函数、冲突处理</span>
+                      <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">内部排序：冒泡、选择、插入排序</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">高级排序：快排、归并、堆排序</span>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                          <span className="text-gray-700 dark:text-gray-300">外部排序：多路归并、置换选择</span>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">内部排序：冒泡、选择、插入排序</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">高级排序：快排、归并、堆排序</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                        <span className="text-gray-700 dark:text-gray-300">外部排序：多路归并、置换选择</span>
-                      </div>
-                    </div>
                   </div>
-                </div>
+                </Link>
               </div>
             </div>
           </section>
@@ -310,13 +318,15 @@ export default function DataStructurePage() {
                 通过系统性的学习和实践，掌握数据结构与算法的核心知识，为计算机科学的学习打下坚实基础。
               </p>
                              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                 <button className="glass-liquid bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 relative overflow-hidden group">
-                   <span className="relative z-10 flex items-center justify-center text-gray-900 dark:text-white">
-                     <Play className="w-5 h-5 mr-2" />
-                     开始学习
-                   </span>
-                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                 </button>
+                 <Link href="/data-structure/sequential-list">
+                   <button className="glass-liquid bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 relative overflow-hidden group">
+                     <span className="relative z-10 flex items-center justify-center text-gray-900 dark:text-white">
+                       <Play className="w-5 h-5 mr-2" />
+                       开始学习
+                     </span>
+                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                   </button>
+                 </Link>
                  <button className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 text-gray-800 dark:text-white px-8 py-3 rounded-2xl font-semibold border border-gray-300/50 dark:border-gray-600/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-500/25 relative overflow-hidden group">
                    <span className="relative z-10 flex items-center justify-center text-gray-800 dark:text-white">
                      <BarChart3 className="w-5 h-5 mr-2" />

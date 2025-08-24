@@ -10,6 +10,7 @@ interface TreeNode {
   title: string
   children?: TreeNode[]
   isOpen?: boolean
+  href?: string
 }
 
 interface DataStructureSidebarProps {
@@ -41,11 +42,51 @@ export default function DataStructureSidebar({ className }: DataStructureSidebar
         setIsCollapsed(JSON.parse(savedCollapsed))
       }
 
-      // 加载活动节点状态
-      const savedActiveNode = localStorage.getItem('dataStructureActiveNode')
-      if (savedActiveNode) {
-        setActiveNode(savedActiveNode)
+      // 检查当前路径，如果是练习页面主页或思维导图页面，则不加载活动节点
+      const currentPath = window.location.pathname
+      if (currentPath === '/data-structure/practice' || currentPath === '/data-structure/mindmap') {
+        // 在练习页面主页或思维导图页面时，不选中任何节点
+        setActiveNode('')
+      } else {
+        // 在其他页面时，加载活动节点状态
+        const savedActiveNode = localStorage.getItem('dataStructureActiveNode')
+        if (savedActiveNode) {
+          setActiveNode(savedActiveNode)
+        }
       }
+    }
+  }, [])
+
+  // 监听路径变化，当回到练习页面主页或思维导图页面时清除选中状态
+  useEffect(() => {
+    const handlePathChange = () => {
+      const currentPath = window.location.pathname
+      if (currentPath === '/data-structure/practice' || currentPath === '/data-structure/mindmap') {
+        setActiveNode('')
+      }
+    }
+
+    // 监听 popstate 事件（浏览器前进后退）
+    window.addEventListener('popstate', handlePathChange)
+    
+    // 监听 pushstate 和 replacestate 事件
+    const originalPushState = history.pushState
+    const originalReplaceState = history.replaceState
+    
+    history.pushState = function(...args) {
+      originalPushState.apply(history, args)
+      handlePathChange()
+    }
+    
+    history.replaceState = function(...args) {
+      originalReplaceState.apply(history, args)
+      handlePathChange()
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handlePathChange)
+      history.pushState = originalPushState
+      history.replaceState = originalReplaceState
     }
   }, [])
 
@@ -58,8 +99,8 @@ export default function DataStructureSidebar({ className }: DataStructureSidebar
           id: 'linear-list',
           title: '线性表',
           children: [
-            { id: 'sequential-list', title: '顺序表' },
-            { id: 'linked-list', title: '链表' }
+            { id: 'sequential-list', title: '顺序表', href: '/data-structure/sequential-list' },
+            { id: 'linked-list', title: '链表', href: '/data-structure/linked-list' }
           ]
         },
         {
@@ -255,13 +296,16 @@ export default function DataStructureSidebar({ className }: DataStructureSidebar
     }
   }
 
-  const handleNodeClick = (nodeId: string) => {
+  const handleNodeClick = (nodeId: string, href?: string) => {
     setActiveNode(nodeId)
     // 保存到 localStorage
     if (typeof window !== 'undefined') {
       localStorage.setItem('dataStructureActiveNode', nodeId)
     }
-    // 这里可以添加路由跳转逻辑
+    // 如果有href，进行路由跳转
+    if (href) {
+      window.location.href = href
+    }
   }
 
   const toggleCollapse = () => {
@@ -301,7 +345,7 @@ export default function DataStructureSidebar({ className }: DataStructureSidebar
             if (hasChildren) {
               toggleNode(node.id)
             } else {
-              handleNodeClick(node.id)
+              handleNodeClick(node.id, node.href)
             }
           }}
         >
@@ -437,33 +481,41 @@ export default function DataStructureSidebar({ className }: DataStructureSidebar
             {/* 分隔线 */}
             <div className="mx-2 h-px bg-gradient-to-r from-transparent via-gray-300 dark:via-gray-600 to-transparent"></div>
             
-            {treeData.map((node, index) => (
-              <div
-                key={node.id}
-                className="group relative"
-                title={node.title}
-              >
-                <div className={cn(
-                  "glass-liquid w-10 h-10 rounded-2xl flex items-center justify-center mx-auto transition-all duration-300 hover:scale-110 hover:shadow-lg border",
-                  "hover:shadow-blue-500/25 dark:hover:shadow-blue-400/25",
-                  index === 0 && "bg-gradient-to-br from-blue-500/10 to-cyan-500/10 dark:from-blue-400/10 dark:to-cyan-400/10 border-blue-200/30 dark:border-blue-700/30",
-                  index === 1 && "bg-gradient-to-br from-green-500/10 to-emerald-500/10 dark:from-green-400/10 dark:to-emerald-400/10 border-green-200/30 dark:border-green-700/30",
-                  index === 2 && "bg-gradient-to-br from-purple-500/10 to-pink-500/10 dark:from-purple-400/10 dark:to-pink-400/10 border-purple-200/30 dark:border-purple-700/30",
-                  index === 3 && "bg-gradient-to-br from-orange-500/10 to-red-500/10 dark:from-orange-400/10 dark:to-red-400/10 border-orange-200/30 dark:border-orange-700/30"
-                )}>
-                  {index === 0 && <List className="w-5 h-5 text-blue-600 dark:text-blue-400" />}
-                  {index === 1 && <GitBranch className="w-5 h-5 text-green-600 dark:text-green-400" />}
-                  {index === 2 && <Network className="w-5 h-5 text-purple-600 dark:text-purple-400" />}
-                  {index === 3 && <Search className="w-5 h-5 text-orange-600 dark:text-orange-400" />}
-                </div>
-                
-                {/* 悬停提示 */}
-                <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-2 py-1 rounded-lg text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
-                  {node.title}
-                  <div className="absolute left-0 top-1/2 transform -translate-x-1 -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-900 dark:border-r-gray-100"></div>
-                </div>
-              </div>
-            ))}
+            {treeData.map((node, index) => {
+              const href = index === 0 ? '/data-structure/linear-structure' :
+                           index === 1 ? '/data-structure/tree-structure' :
+                           index === 2 ? '/data-structure/graph-structure' :
+                           index === 3 ? '/data-structure/search-sort' : '#'
+              
+              return (
+                <Link key={node.id} href={href}>
+                  <div
+                    className="group relative cursor-pointer"
+                    title={node.title}
+                  >
+                    <div className={cn(
+                      "glass-liquid w-10 h-10 rounded-2xl flex items-center justify-center mx-auto transition-all duration-300 hover:scale-110 hover:shadow-lg border",
+                      "hover:shadow-blue-500/25 dark:hover:shadow-blue-400/25",
+                      index === 0 && "bg-gradient-to-br from-blue-500/10 to-cyan-500/10 dark:from-blue-400/10 dark:to-cyan-400/10 border-blue-200/30 dark:border-blue-700/30",
+                      index === 1 && "bg-gradient-to-br from-green-500/10 to-emerald-500/10 dark:from-green-400/10 dark:to-emerald-400/10 border-green-200/30 dark:border-green-700/30",
+                      index === 2 && "bg-gradient-to-br from-purple-500/10 to-pink-500/10 dark:from-purple-400/10 dark:to-pink-400/10 border-purple-200/30 dark:border-purple-700/30",
+                      index === 3 && "bg-gradient-to-br from-orange-500/10 to-red-500/10 dark:from-orange-400/10 dark:to-red-400/10 border-orange-200/30 dark:border-orange-700/30"
+                    )}>
+                      {index === 0 && <List className="w-5 h-5 text-blue-600 dark:text-blue-400" />}
+                      {index === 1 && <GitBranch className="w-5 h-5 text-green-600 dark:text-green-400" />}
+                      {index === 2 && <Network className="w-5 h-5 text-purple-600 dark:text-purple-400" />}
+                      {index === 3 && <Search className="w-5 h-5 text-orange-600 dark:text-orange-400" />}
+                    </div>
+                    
+                    {/* 悬停提示 */}
+                    <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-2 py-1 rounded-lg text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+                      {node.title}
+                      <div className="absolute left-0 top-1/2 transform -translate-x-1 -translate-y-1/2 w-0 h-0 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-900 dark:border-r-gray-100"></div>
+                    </div>
+                  </div>
+                </Link>
+              )
+            })}
           </div>
         )}
       </div>

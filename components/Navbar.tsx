@@ -1,13 +1,14 @@
 'use client'
 
-import { GraduationCap } from 'lucide-react'
+import { GraduationCap, Menu, X } from 'lucide-react'
 import Link from 'next/link'
 import ThemeToggle from './ThemeToggle'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 
 export default function Navbar() {
   const [activeLink, setActiveLink] = useState<string | null>(null)
   const [ripples, setRipples] = useState<Array<{id: number, x: number, y: number, link: string}>>([])
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const rippleId = useRef(0)
 
   const handleLinkClick = (linkName: string, event: React.MouseEvent) => {
@@ -32,7 +33,22 @@ export default function Navbar() {
       setRipples(prev => prev.filter(r => r.id !== newRipple.id))
       setActiveLink(null)
     }, 600)
+    
+    // 移动端点击链接后关闭菜单
+    setIsMobileMenuOpen(false)
   }
+
+  // 监听窗口大小变化，在大屏幕时关闭移动端菜单
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 768) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-white/70 dark:bg-gray-900/70 border-b border-white/20 dark:border-gray-700/30 shadow-lg shadow-black/5 dark:shadow-black/20">
@@ -42,20 +58,20 @@ export default function Navbar() {
       {/* 顶部高光效果 */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/40 dark:via-gray-400/40 to-transparent"></div>
       
-      <div className="relative max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
+      <div className="relative max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 py-4">
         {/* 左侧 Logo 和标题 */}
-        <div className="flex items-center space-x-3 group">
+        <Link href="/" className="flex items-center space-x-2 sm:space-x-3 group">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg blur-sm opacity-75 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <GraduationCap className="relative w-7 h-7 text-white drop-shadow-sm" />
+            <GraduationCap className="relative w-6 h-6 sm:w-7 sm:h-7 text-white drop-shadow-sm" />
           </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+          <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
             CS-408考研助手
           </span>
-        </div>
+        </Link>
         
-        {/* 右侧导航链接和主题切换 */}
-        <div className="flex items-center space-x-8">
+        {/* 桌面端导航链接和主题切换 */}
+        <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
           <Link 
             href="/algorithm" 
             onClick={(e) => handleLinkClick('algorithm', e)}
@@ -161,6 +177,61 @@ export default function Navbar() {
               <ThemeToggle />
             </div>
           </div>
+        </div>
+
+        {/* 移动端菜单按钮 */}
+        <div className="md:hidden flex items-center space-x-3">
+          <div className="relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-gray-200/50 to-gray-300/50 dark:from-gray-700/50 dark:to-gray-600/50 rounded-lg blur-sm"></div>
+            <div className="relative">
+              <ThemeToggle />
+            </div>
+          </div>
+          
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="relative p-2 rounded-xl bg-white/80 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700/80 transition-all duration-300 border border-gray-300/50 dark:border-gray-600/50"
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+            ) : (
+              <Menu className="w-5 h-5 text-gray-700 dark:text-gray-300" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* 移动端菜单 */}
+      <div className={`md:hidden absolute top-full left-0 right-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl border-b border-gray-200/50 dark:border-gray-700/50 shadow-lg transition-all duration-300 ease-in-out ${
+        isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4 pointer-events-none'
+      }`}>
+        <div className="px-4 py-4 space-y-2">
+          <Link 
+            href="/algorithm" 
+            onClick={(e) => handleLinkClick('algorithm', e)}
+            className="block relative text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 group overflow-hidden rounded-xl px-4 py-3 select-none"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-blue-500/0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span className="relative z-10 font-medium">算法可视化</span>
+          </Link>
+          
+          <Link 
+            href="/practice" 
+            onClick={(e) => handleLinkClick('practice', e)}
+            className="block relative text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 group overflow-hidden rounded-xl px-4 py-3 select-none"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/5 to-purple-500/0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span className="relative z-10 font-medium">练习测试</span>
+          </Link>
+          
+          <Link 
+            href="/mindmap" 
+            onClick={(e) => handleLinkClick('mindmap', e)}
+            className="block relative text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-300 group overflow-hidden rounded-xl px-4 py-3 select-none"
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-pink-500/0 via-pink-500/5 to-pink-500/0 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span className="relative z-10 font-medium">思维导图</span>
+          </Link>
         </div>
       </div>
     </nav>

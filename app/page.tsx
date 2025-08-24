@@ -19,36 +19,48 @@ export default function Home() {
       <Navbar />
       
       {/* 英雄区域 */}
-      <section className="relative bg-gradient-to-br from-blue-900 to-blue-800 py-20 px-6 mt-16 overflow-hidden">
-        {/* 液体背景效果 */}
+      <section className="relative bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-20 px-6 mt-16 overflow-hidden">
+        {/* iOS风格背景液体效果 */}
         <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-400/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-400/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-cyan-400/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+          <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-gradient-to-br from-indigo-400/15 to-cyan-400/15 rounded-full blur-3xl animate-pulse delay-1000"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-br from-purple-400/10 to-pink-400/10 rounded-full blur-3xl animate-pulse delay-500"></div>
+          <div className="absolute top-1/3 right-1/3 w-48 h-48 bg-gradient-to-br from-cyan-400/8 to-blue-400/8 rounded-full blur-2xl animate-pulse delay-700"></div>
         </div>
         
-        {/* 背景图案 */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-black/20 to-transparent"></div>
+        {/* iOS风格背景网格 */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="w-full h-full" style={{
+            backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)',
+            backgroundSize: '20px 20px'
+          }} />
         </div>
         
-        <div className="relative max-w-6xl mx-auto text-center text-white">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+        <div className="relative max-w-6xl mx-auto text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-gray-800 via-blue-800 to-indigo-800 dark:from-white dark:via-blue-200 dark:to-indigo-200 bg-clip-text text-transparent">
             CS-408考研计算机科目<br />知识点可视化平台
           </h1>
-          <p className="text-xl md:text-2xl mb-8 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl mb-8 max-w-4xl mx-auto leading-relaxed text-gray-700 dark:text-gray-200">
             系统性学习计算机组成原理、操作系统、计算机网络、数据结构四大核心科目<br />
             提供完整的知识点导航、思维导图和互动式学习体验
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="glass-liquid ripple-effect bg-blue-600/80 hover:bg-blue-700/90 text-white px-8 py-3 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 relative overflow-hidden group will-change-transform">
-              <span className="relative z-10">开始学习</span>
+            <button className="glass-liquid bg-white/90 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700/90 text-gray-800 dark:text-white px-8 py-3 rounded-2xl font-semibold border border-gray-300/50 dark:border-gray-600/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-500/25 relative overflow-hidden group">
+              <span className="relative z-10 flex items-center justify-center">
+                <Play className="w-5 h-5 mr-2" />
+                开始学习
+              </span>
               <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
             </button>
-            <button className="glass-liquid ripple-effect bg-gray-200/80 dark:bg-gray-700/80 hover:bg-gray-300/90 dark:hover:bg-gray-600/90 text-gray-800 dark:text-white px-8 py-3 rounded-2xl font-semibold border border-gray-300/50 dark:border-gray-600/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-500/25 relative overflow-hidden group will-change-transform">
-              <span className="relative z-10">算法可视化</span>
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-            </button>
+            <Link href="/algorithm">
+              <button className="glass-liquid bg-white/90 dark:bg-gray-800/80 hover:bg-white dark:hover:bg-gray-700/90 text-gray-800 dark:text-white px-8 py-3 rounded-2xl font-semibold border border-gray-300/50 dark:border-gray-600/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-500/25 relative overflow-hidden group">
+                <span className="relative z-10 flex items-center justify-center">
+                  <BarChart3 className="w-5 h-5 mr-2" />
+                  算法可视化
+                </span>
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+              </button>
+            </Link>
           </div>
         </div>
       </section>
@@ -187,36 +199,44 @@ export default function Home() {
           <h2 className="text-3xl font-bold text-gray-800 dark:text-white text-center mb-12">快速导航</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {/* 算法演示 */}
-            <div className="glass-liquid bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl dark:shadow-gray-900/50 p-6 text-center hover:shadow-2xl dark:hover:shadow-gray-900/70 transition-all duration-300 hover:scale-105 group">
-              <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Play className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            <Link href="/algorithm">
+              <div className="glass-liquid bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl dark:shadow-gray-900/50 p-6 text-center hover:shadow-2xl dark:hover:shadow-gray-900/70 transition-all duration-300 hover:scale-105 group cursor-pointer">
+                <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Play className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                </div>
+                <p className="text-gray-800 dark:text-white font-medium">算法演示</p>
               </div>
-              <p className="text-gray-800 dark:text-white font-medium">算法演示</p>
-            </div>
+            </Link>
 
             {/* 练习题库 */}
-            <div className="glass-liquid bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl dark:shadow-gray-900/50 p-6 text-center hover:shadow-2xl dark:hover:shadow-gray-900/70 transition-all duration-300 hover:scale-105 group">
-              <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                <FileText className="w-6 h-6 text-green-600 dark:text-green-400" />
+            <Link href="/practice">
+              <div className="glass-liquid bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl dark:shadow-gray-900/50 p-6 text-center hover:shadow-2xl dark:hover:shadow-gray-900/70 transition-all duration-300 hover:scale-105 group cursor-pointer">
+                <div className="w-12 h-12 bg-green-100 dark:bg-green-900/30 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <FileText className="w-6 h-6 text-green-600 dark:text-green-400" />
+                </div>
+                <p className="text-gray-800 dark:text-white font-medium">练习题库</p>
               </div>
-              <p className="text-gray-800 dark:text-white font-medium">练习题库</p>
-            </div>
+            </Link>
 
             {/* 思维导图 */}
-            <div className="glass-liquid bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl dark:shadow-gray-900/50 p-6 text-center hover:shadow-2xl dark:hover:shadow-gray-900/70 transition-all duration-300 hover:scale-105 group">
-              <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                <Share2 className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+            <Link href="/mindmap">
+              <div className="glass-liquid bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl dark:shadow-gray-900/50 p-6 text-center hover:shadow-2xl dark:hover:shadow-gray-900/70 transition-all duration-300 hover:scale-105 group cursor-pointer">
+                <div className="w-12 h-12 bg-purple-100 dark:bg-purple-900/30 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <Share2 className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                </div>
+                <p className="text-gray-800 dark:text-white font-medium">思维导图</p>
               </div>
-              <p className="text-gray-800 dark:text-white font-medium">思维导图</p>
-            </div>
+            </Link>
 
             {/* 学习进度 */}
-            <div className="glass-liquid bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl dark:shadow-gray-900/50 p-6 text-center hover:shadow-2xl dark:hover:shadow-gray-900/70 transition-all duration-300 hover:scale-105 group">
-              <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
-                <BarChart3 className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+            <Link href="/progress">
+              <div className="glass-liquid bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl dark:shadow-gray-900/50 p-6 text-center hover:shadow-2xl dark:hover:shadow-gray-900/70 transition-all duration-300 hover:scale-105 group cursor-pointer">
+                <div className="w-12 h-12 bg-orange-100 dark:bg-orange-900/30 rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300">
+                  <BarChart3 className="w-6 h-6 text-orange-600 dark:text-orange-400" />
+                </div>
+                <p className="text-gray-800 dark:text-white font-medium">学习进度</p>
               </div>
-              <p className="text-gray-800 dark:text-white font-medium">学习进度</p>
-            </div>
+            </Link>
           </div>
         </div>
       </section>

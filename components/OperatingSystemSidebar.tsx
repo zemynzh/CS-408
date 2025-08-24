@@ -41,11 +41,51 @@ export default function OperatingSystemSidebar({ className }: OperatingSystemSid
         setIsCollapsed(JSON.parse(savedCollapsed))
       }
 
-      // 加载活动节点状态
-      const savedActiveNode = localStorage.getItem('operatingSystemActiveNode')
-      if (savedActiveNode) {
-        setActiveNode(savedActiveNode)
+      // 检查当前路径，如果是练习页面主页，则不加载活动节点
+      const currentPath = window.location.pathname
+      if (currentPath === '/operating-system/practice') {
+        // 在练习页面主页时，不选中任何节点
+        setActiveNode('')
+      } else {
+        // 在其他页面时，加载活动节点状态
+        const savedActiveNode = localStorage.getItem('operatingSystemActiveNode')
+        if (savedActiveNode) {
+          setActiveNode(savedActiveNode)
+        }
       }
+    }
+  }, [])
+
+  // 监听路径变化，当回到练习页面主页时清除选中状态
+  useEffect(() => {
+    const handlePathChange = () => {
+      const currentPath = window.location.pathname
+      if (currentPath === '/operating-system/practice') {
+        setActiveNode('')
+      }
+    }
+
+    // 监听 popstate 事件（浏览器前进后退）
+    window.addEventListener('popstate', handlePathChange)
+    
+    // 监听 pushstate 和 replacestate 事件
+    const originalPushState = history.pushState
+    const originalReplaceState = history.replaceState
+    
+    history.pushState = function(...args) {
+      originalPushState.apply(history, args)
+      handlePathChange()
+    }
+    
+    history.replaceState = function(...args) {
+      originalReplaceState.apply(history, args)
+      handlePathChange()
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handlePathChange)
+      history.pushState = originalPushState
+      history.replaceState = originalReplaceState
     }
   }, [])
 

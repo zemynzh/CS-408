@@ -41,11 +41,51 @@ export default function AlgorithmSidebar({ className }: AlgorithmSidebarProps) {
         setIsCollapsed(JSON.parse(savedCollapsed))
       }
 
-      // 加载活动节点状态
-      const savedActiveNode = localStorage.getItem('algorithmActiveNode')
-      if (savedActiveNode) {
-        setActiveNode(savedActiveNode)
+      // 检查当前路径，如果是算法可视化主页，则不加载活动节点
+      const currentPath = window.location.pathname
+      if (currentPath === '/algorithm') {
+        // 在算法可视化主页时，不选中任何节点
+        setActiveNode('')
+      } else {
+        // 在其他算法页面时，加载活动节点状态
+        const savedActiveNode = localStorage.getItem('algorithmActiveNode')
+        if (savedActiveNode) {
+          setActiveNode(savedActiveNode)
+        }
       }
+    }
+  }, [])
+
+  // 监听路径变化，当回到算法可视化主页时清除选中状态
+  useEffect(() => {
+    const handlePathChange = () => {
+      const currentPath = window.location.pathname
+      if (currentPath === '/algorithm') {
+        setActiveNode('')
+      }
+    }
+
+    // 监听 popstate 事件（浏览器前进后退）
+    window.addEventListener('popstate', handlePathChange)
+    
+    // 监听 pushstate 和 replacestate 事件
+    const originalPushState = history.pushState
+    const originalReplaceState = history.replaceState
+    
+    history.pushState = function(...args) {
+      originalPushState.apply(history, args)
+      handlePathChange()
+    }
+    
+    history.replaceState = function(...args) {
+      originalReplaceState.apply(history, args)
+      handlePathChange()
+    }
+
+    return () => {
+      window.removeEventListener('popstate', handlePathChange)
+      history.pushState = originalPushState
+      history.replaceState = originalReplaceState
     }
   }, [])
 
@@ -236,6 +276,39 @@ export default function AlgorithmSidebar({ className }: AlgorithmSidebarProps) {
         break
       case 'insertion-sort':
         window.location.href = '/algorithm/visualizations/insertion-sort'
+        break
+      case 'quick-sort':
+        window.location.href = '/algorithm/visualizations/quick-sort'
+        break
+      case 'merge-sort':
+        window.location.href = '/algorithm/visualizations/merge-sort'
+        break
+      case 'heap-sort':
+        window.location.href = '/algorithm/visualizations/heap-sort'
+        break
+      case 'linear-search':
+        window.location.href = '/algorithm/visualizations/linear-search'
+        break
+      case 'binary-search':
+        window.location.href = '/algorithm/visualizations/binary-search'
+        break
+      case 'depth-first-search':
+        window.location.href = '/algorithm/visualizations/depth-first-search'
+        break
+      case 'breadth-first-search':
+        window.location.href = '/algorithm/visualizations/breadth-first-search'
+        break
+      case 'factorial':
+        window.location.href = '/algorithm/visualizations/factorial'
+        break
+      case 'fibonacci':
+        window.location.href = '/algorithm/visualizations/fibonacci'
+        break
+      case 'tower-of-hanoi':
+        window.location.href = '/algorithm/visualizations/tower-of-hanoi'
+        break
+      case 'backtracking':
+        window.location.href = '/algorithm/visualizations/backtracking'
         break
       // 可以继续添加其他算法的路由
       default:

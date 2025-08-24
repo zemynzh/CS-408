@@ -357,8 +357,8 @@ export default function AlgorithmPage() {
                 让抽象的算法概念变得直观易懂。
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <button className="glass-liquid bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/25 relative overflow-hidden group">
-                  <span className="relative z-10 flex items-center justify-center text-white">
+                <button className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 text-gray-800 dark:text-white px-8 py-3 rounded-2xl font-semibold border border-gray-300/50 dark:border-gray-600/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-500/25 relative overflow-hidden group">
+                  <span className="relative z-10 flex items-center justify-center text-gray-800 dark:text-white">
                     <Play className="w-5 h-5 mr-2" />
                     开始演示
                   </span>

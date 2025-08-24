@@ -4,37 +4,19 @@ import Navbar from '@/components/Navbar'
 import { 
   Brain, 
   Lightbulb, 
-  Network, 
-  Layers, 
-  Code, 
+  Layers,
   Database,
   Cpu,
   Globe,
-  Shield,
   Zap,
   Target,
   BookOpen,
-  ChevronRight,
-  Plus,
-  Minus,
-  RotateCcw,
-  Download,
-  Share2,
-  Settings,
-  Search,
-  Filter,
-  Grid,
-  List,
-  Eye,
-  EyeOff
+  ArrowRight
 } from 'lucide-react'
 import { useState } from 'react'
+import Link from 'next/link'
 
 export default function MindmapPage() {
-  const [selectedNode, setSelectedNode] = useState<string | null>(null)
-  const [zoom, setZoom] = useState(100)
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
-  const [showDetails, setShowDetails] = useState(true)
 
   const mindmapData = {
     center: {
@@ -57,7 +39,8 @@ export default function MindmapPage() {
           'CPU结构',
           '总线系统',
           '输入输出系统'
-        ]
+        ],
+        link: '/computer-organization'
       },
       {
         id: 'operating-system',
@@ -72,7 +55,8 @@ export default function MindmapPage() {
           '设备管理',
           '死锁处理',
           '系统安全'
-        ]
+        ],
+        link: '/operating-system'
       },
       {
         id: 'computer-network',
@@ -87,7 +71,8 @@ export default function MindmapPage() {
           '网络层',
           '传输层',
           '应用层'
-        ]
+        ],
+        link: '/computer-network'
       },
       {
         id: 'data-structure',
@@ -102,7 +87,8 @@ export default function MindmapPage() {
           '查找算法',
           '排序算法',
           '算法分析'
-        ]
+        ],
+        link: '/data-structure/mindmap'
       }
     ]
   }
@@ -128,7 +114,7 @@ export default function MindmapPage() {
                   <Brain className="w-10 h-10 text-white" />
                 </div>
                 <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-purple-600 via-pink-600 to-indigo-600 dark:from-purple-400 dark:via-pink-400 dark:to-indigo-400 bg-clip-text text-transparent mb-4">
-                  思维导图
+                  思维导图中心
                 </h1>
                 <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
                   CS-408 计算机考研知识点可视化思维导图
@@ -152,229 +138,55 @@ export default function MindmapPage() {
           </div>
         </section>
 
-        {/* 工具栏 */}
-        <section className="mb-8 mt-4">
-          <div className="glass-liquid bg-white/60 dark:bg-gray-900/60 backdrop-blur-2xl rounded-2xl p-4 border border-white/30 dark:border-gray-700/30 shadow-xl shadow-black/10 dark:shadow-black/30">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <div className="flex items-center space-x-4">
-                <button 
-                  onClick={() => setZoom(Math.max(50, zoom - 10))}
-                  className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 p-2 rounded-xl border border-white/30 dark:border-gray-600/30 transition-all duration-300 hover:scale-105"
-                >
-                  <Minus className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                </button>
-                <span className="text-sm font-medium text-gray-700 dark:text-gray-300 min-w-[60px] text-center">
-                  {zoom}%
-                </span>
-                <button 
-                  onClick={() => setZoom(Math.min(200, zoom + 10))}
-                  className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 p-2 rounded-xl border border-white/30 dark:border-gray-600/30 transition-all duration-300 hover:scale-105"
-                >
-                  <Plus className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                </button>
-                <button 
-                  onClick={() => setZoom(100)}
-                  className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 p-2 rounded-xl border border-white/30 dark:border-gray-600/30 transition-all duration-300 hover:scale-105"
-                >
-                  <RotateCcw className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                </button>
-              </div>
-              
-              <div className="flex items-center space-x-4">
-                                 <button 
-                   onClick={() => setViewMode('grid')}
-                   className={`p-2 rounded-xl transition-all duration-300 ${
-                     viewMode === 'grid' 
-                       ? 'glass-liquid bg-purple-400/30 dark:bg-purple-400/20 border border-purple-400/40 dark:border-purple-600/30' 
-                       : 'glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 border border-white/30 dark:border-gray-600/30'
-                   }`}
-                 >
-                   <Grid className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                 </button>
-                 <button 
-                   onClick={() => setViewMode('list')}
-                   className={`p-2 rounded-xl transition-all duration-300 ${
-                     viewMode === 'list' 
-                       ? 'glass-liquid bg-purple-400/30 dark:bg-purple-400/20 border border-purple-400/40 dark:border-purple-600/30' 
-                       : 'glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 border border-white/30 dark:border-gray-600/30'
-                   }`}
-                 >
-                   <List className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                 </button>
-                <button 
-                  onClick={() => setShowDetails(!showDetails)}
-                  className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 p-2 rounded-xl border border-white/30 dark:border-gray-600/30 transition-all duration-300 hover:scale-105"
-                >
-                  {showDetails ? <EyeOff className="w-5 h-5 text-gray-600 dark:text-gray-300" /> : <Eye className="w-5 h-5 text-gray-600 dark:text-gray-300" />}
-                </button>
-              </div>
-              
-              <div className="flex items-center space-x-4">
-                <button className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 p-2 rounded-xl border border-white/30 dark:border-gray-600/30 transition-all duration-300 hover:scale-105">
-                  <Download className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                </button>
-                <button className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 p-2 rounded-xl border border-white/30 dark:border-gray-600/30 transition-all duration-300 hover:scale-105">
-                  <Share2 className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                </button>
-                <button className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 p-2 rounded-xl border border-white/30 dark:border-gray-600/30 transition-all duration-300 hover:scale-105">
-                  <Settings className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* 思维导图主体 */}
+        {/* 四个科目卡片 - 类似首页样式 */}
         <section className="mb-8">
-          <div className="glass-liquid bg-white/60 dark:bg-gray-900/60 backdrop-blur-2xl rounded-3xl p-8 border border-white/30 dark:border-gray-700/30 shadow-xl shadow-black/10 dark:shadow-black/30 min-h-[600px]">
-            {/* 中心节点 */}
-            <div className="flex justify-center mb-12">
-                             <div 
-                 className={`glass-liquid bg-gradient-to-br ${mindmapData.center.color} backdrop-blur-2xl rounded-3xl p-6 border border-white/40 dark:border-gray-700/30 shadow-2xl shadow-black/20 dark:shadow-black/40 transition-all duration-500 hover:scale-110 cursor-pointer ${
-                   selectedNode === mindmapData.center.id ? 'ring-4 ring-purple-300/50 dark:ring-purple-600/50' : ''
-                 }`}
-                 onClick={() => setSelectedNode(mindmapData.center.id)}
-               >
-                                 <div className="text-center">
-                   <div className="w-16 h-16 bg-white/30 dark:bg-white/20 rounded-2xl flex items-center justify-center mb-4 mx-auto">
-                     <mindmapData.center.icon className="w-8 h-8 text-gray-800 dark:text-white" />
-                   </div>
-                   <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{mindmapData.center.title}</h3>
-                   <p className="text-gray-700 dark:text-white/80 text-sm">计算机考研核心</p>
-                 </div>
-              </div>
-            </div>
-
-            {/* 分支节点 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {mindmapData.branches.map((branch, index) => (
-                <div key={branch.id} className="relative">
-                  {/* 连接线 */}
-                  <div className="absolute top-1/2 left-1/2 w-px h-16 bg-gradient-to-b from-purple-400/30 to-transparent transform -translate-x-1/2 -translate-y-full"></div>
-                  
-                                     <div 
-                     className={`glass-liquid bg-gradient-to-br ${branch.color} backdrop-blur-2xl rounded-2xl p-6 border border-white/40 dark:border-gray-700/30 shadow-xl shadow-black/20 dark:shadow-black/40 transition-all duration-500 hover:scale-105 cursor-pointer ${
-                       selectedNode === branch.id ? 'ring-4 ring-purple-300/50 dark:ring-purple-600/50' : ''
-                     }`}
-                     onClick={() => setSelectedNode(branch.id)}
-                   >
-                    <div className="text-center">
-                                             <div className="w-12 h-12 bg-white/30 dark:bg-white/20 rounded-xl flex items-center justify-center mb-3 mx-auto">
-                         <branch.icon className="w-6 h-6 text-gray-800 dark:text-white" />
-                       </div>
-                       <h4 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">{branch.title}</h4>
-                       <p className="text-gray-700 dark:text-white/80 text-xs mb-3">{branch.description}</p>
-                       
-                       {showDetails && (
-                         <div className="space-y-2">
-                           {branch.topics.slice(0, 3).map((topic, topicIndex) => (
-                             <div key={topicIndex} className="glass-liquid bg-white/40 dark:bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/40 dark:border-white/20">
-                               <p className="text-gray-800 dark:text-white/90 text-xs font-medium">{topic}</p>
-                             </div>
-                           ))}
-                           {branch.topics.length > 3 && (
-                             <div className="glass-liquid bg-white/40 dark:bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/40 dark:border-white/20">
-                               <p className="text-gray-700 dark:text-white/80 text-xs">+{branch.topics.length - 3} 更多...</p>
-                             </div>
-                           )}
-                         </div>
-                       )}
-                       
-                       <button className="mt-4 glass-liquid bg-white/50 dark:bg-white/20 hover:bg-white/60 dark:hover:bg-white/30 backdrop-blur-sm rounded-lg px-3 py-1 border border-white/50 dark:border-white/30 transition-all duration-300 hover:scale-105">
-                         <span className="text-gray-800 dark:text-white text-xs font-medium">查看详情</span>
-                       </button>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {mindmapData.branches.map((branch, index) => (
+              <Link href={branch.link} key={branch.id}>
+                <div className="glass-liquid bg-white/90 dark:bg-gray-800/90 rounded-2xl shadow-xl dark:shadow-gray-900/50 p-6 border-l-4 hover:shadow-2xl dark:hover:shadow-gray-900/70 transition-all duration-300 hover:scale-105 relative overflow-hidden group cursor-pointer h-full flex flex-col"
+                     style={{
+                       borderLeftColor: branch.color.includes('blue') ? '#60a5fa' : 
+                                       branch.color.includes('green') ? '#4ade80' : 
+                                       branch.color.includes('purple') ? '#a78bfa' : '#fb923c'
+                     }}>
+                  <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                       style={{
+                         background: branch.color.includes('blue') ? 'linear-gradient(to bottom right, rgba(59, 130, 246, 0.05), transparent)' : 
+                                    branch.color.includes('green') ? 'linear-gradient(to bottom right, rgba(34, 197, 94, 0.05), transparent)' : 
+                                    branch.color.includes('purple') ? 'linear-gradient(to bottom right, rgba(147, 51, 234, 0.05), transparent)' : 
+                                    'linear-gradient(to bottom right, rgba(249, 115, 22, 0.05), transparent)'
+                       }}></div>
+                  <div className="relative z-10 flex flex-col h-full">
+                    <div className="flex items-start space-x-4 mb-4">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300"
+                           style={{
+                             backgroundColor: branch.color.includes('blue') ? '#dbeafe' : 
+                                             branch.color.includes('green') ? '#dcfce7' : 
+                                             branch.color.includes('purple') ? '#f3e8ff' : '#fed7aa'
+                           }}>
+                        <branch.icon className="w-5 h-5" 
+                                    style={{
+                                      color: branch.color.includes('blue') ? '#2563eb' : 
+                                             branch.color.includes('green') ? '#16a34a' : 
+                                             branch.color.includes('purple') ? '#9333ea' : '#ea580c'
+                                    }} />
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-2">{branch.title}</h3>
+                        <p className="text-gray-600 dark:text-gray-400 text-sm">{branch.description}</p>
+                      </div>
+                    </div>
+                    <div className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium text-sm flex items-center group/link mt-auto">
+                      查看思维导图 <ArrowRight className="w-4 h-4 ml-1 group-hover/link:translate-x-1 transition-transform duration-300" />
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+              </Link>
+            ))}
           </div>
         </section>
 
-        {/* 详细信息面板 */}
-        {selectedNode && (
-          <section className="mb-8">
-            <div className="glass-liquid bg-white/70 dark:bg-gray-900/70 backdrop-blur-2xl rounded-3xl p-8 border border-white/30 dark:border-gray-700/30 shadow-xl shadow-black/10 dark:shadow-black/30">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                  {selectedNode === 'cs408' ? 'CS-408 计算机考研' : mindmapData.branches.find(b => b.id === selectedNode)?.title}
-                </h2>
-                <button 
-                  onClick={() => setSelectedNode(null)}
-                  className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 p-2 rounded-xl border border-white/30 dark:border-gray-600/30 transition-all duration-300 hover:scale-105"
-                >
-                  <ChevronRight className="w-5 h-5 text-gray-600 dark:text-gray-300" />
-                </button>
-              </div>
-              
-              {selectedNode === 'cs408' ? (
-                <div className="space-y-6">
-                  <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                    计算机考研408是全国统考科目，包含四门核心课程：计算机组成原理、操作系统、计算机网络和数据结构。
-                    通过系统性的学习和思维导图可视化，帮助考生更好地理解和记忆知识点。
-                  </p>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="glass-liquid bg-gradient-to-r from-blue-50/50 to-cyan-50/50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl p-6 border border-blue-200/30 dark:border-blue-700/30">
-                      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">学习建议</h3>
-                      <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                        <li>• 建立知识体系框架</li>
-                        <li>• 理解核心概念原理</li>
-                        <li>• 多做真题练习</li>
-                        <li>• 定期复习巩固</li>
-                      </ul>
-                    </div>
-                    <div className="glass-liquid bg-gradient-to-r from-purple-50/50 to-pink-50/50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 border border-purple-200/30 dark:border-purple-700/30">
-                      <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">考试重点</h3>
-                      <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                        <li>• 基础概念理解</li>
-                        <li>• 算法设计与分析</li>
-                        <li>• 系统设计原理</li>
-                        <li>• 实际应用能力</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  {(() => {
-                    const branch = mindmapData.branches.find(b => b.id === selectedNode)
-                    if (!branch) return null
-                    
-                    return (
-                      <>
-                        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-                          {branch.description}
-                        </p>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          <div className="glass-liquid bg-gradient-to-r from-blue-50/50 to-cyan-50/50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl p-6 border border-blue-200/30 dark:border-blue-700/30">
-                            <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">核心知识点</h3>
-                            <div className="space-y-2">
-                              {branch.topics.map((topic, index) => (
-                                <div key={index} className="flex items-center space-x-2">
-                                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                                  <span className="text-sm text-gray-600 dark:text-gray-400">{topic}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="glass-liquid bg-gradient-to-r from-purple-50/50 to-pink-50/50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-2xl p-6 border border-purple-200/30 dark:border-purple-700/30">
-                            <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-3">学习要点</h3>
-                            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-                              <li>• 理解基本概念</li>
-                              <li>• 掌握核心原理</li>
-                              <li>• 熟悉典型算法</li>
-                              <li>• 练习实际应用</li>
-                            </ul>
-                          </div>
-                        </div>
-                      </>
-                    )
-                  })()}
-                </div>
-              )}
-            </div>
-          </section>
-        )}
+
 
         {/* 操作提示 */}
         <section className="text-center">
@@ -383,24 +195,28 @@ export default function MindmapPage() {
               交互式学习体验
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
-              点击任意节点查看详细信息，使用工具栏进行缩放、切换视图模式等操作。
-              通过思维导图的方式，让知识点之间的联系更加清晰直观。
+              点击任意科目卡片进入对应的思维导图页面，通过可视化的方式让知识点之间的联系更加清晰直观。
+              每个科目都配备了完整的思维导图和详细的知识点解析。
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                             <button className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 text-gray-800 dark:text-white px-8 py-3 rounded-2xl font-semibold border border-gray-300/50 dark:border-gray-600/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-500/25 relative overflow-hidden group">
-                 <span className="relative z-10 flex items-center justify-center">
-                   <Lightbulb className="w-5 h-5 mr-2" />
-                   开始探索
-                 </span>
-                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-               </button>
-              <button className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 text-gray-800 dark:text-white px-8 py-3 rounded-2xl font-semibold border border-gray-300/50 dark:border-gray-600/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-500/25 relative overflow-hidden group">
-                <span className="relative z-10 flex items-center justify-center">
-                  <BookOpen className="w-5 h-5 mr-2" />
-                  返回课程
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-              </button>
+              <Link href="/">
+                <button className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 text-gray-800 dark:text-white px-8 py-3 rounded-2xl font-semibold border border-gray-300/50 dark:border-gray-600/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-500/25 relative overflow-hidden group">
+                  <span className="relative z-10 flex items-center justify-center">
+                    <Lightbulb className="w-5 h-5 mr-2" />
+                    返回首页
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                </button>
+              </Link>
+              <Link href="/algorithm">
+                <button className="glass-liquid bg-white/80 dark:bg-gray-800/80 hover:bg-white/90 dark:hover:bg-gray-700/90 text-gray-800 dark:text-white px-8 py-3 rounded-2xl font-semibold border border-gray-300/50 dark:border-gray-600/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-gray-500/25 relative overflow-hidden group">
+                  <span className="relative z-10 flex items-center justify-center">
+                    <BookOpen className="w-5 h-5 mr-2" />
+                    算法可视化
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent transform -skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                </button>
+              </Link>
             </div>
           </div>
         </section>
