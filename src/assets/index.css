@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 45 20% 96%;
+    --foreground: 220 15% 15%;
+    --card: 45 20% 96%;
+    --card-foreground: 220 15% 15%;
+    --popover: 45 20% 96%;
+    --popover-foreground: 220 15% 15%;
+    --primary: 190 35% 30%;
+    --primary-foreground: 45 20% 98%;
+    --secondary: 45 15% 92%;
+    --secondary-foreground: 190 35% 30%;
+    --muted: 45 15% 92%;
+    --muted-foreground: 220 10% 45%;
+    --accent: 45 20% 90%;
+    --accent-foreground: 190 35% 30%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 30 10% 85%;
+    --input: 30 10% 85%;
+    --ring: 190 35% 30%;
+    --radius: 0.75rem;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+
+  .dark {
+    --background: 220 15% 12%;
+    --foreground: 45 15% 88%;
+    --card: 220 15% 12%;
+    --card-foreground: 45 15% 88%;
+    --popover: 220 15% 12%;
+    --popover-foreground: 45 15% 88%;
+    --primary: 190 50% 65%;
+    --primary-foreground: 220 15% 10%;
+    --secondary: 220 15% 18%;
+    --secondary-foreground: 45 15% 88%;
+    --muted: 220 15% 18%;
+    --muted-foreground: 220 10% 65%;
+    --accent: 220 15% 22%;
+    --accent-foreground: 45 15% 88%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 220 10% 20%;
+    --input: 220 10% 20%;
+    --ring: 190 50% 65%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground transition-colors duration-500 ease-in-out;
+  }
+}
+
+/* 全局内容区域优化 */
+.prose {
+  @apply max-w-none;
+}
+
+/* 考研题目专用表格样式 */
+.prose table {
+  @apply w-full border-collapse my-6 overflow-hidden rounded-lg border border-border bg-card/30;
+}
+.prose th {
+  @apply bg-muted/50 p-3 text-left font-bold text-foreground border border-border;
+}
+.prose td {
+  @apply p-3 border border-border text-foreground/90;
+}
+.prose tr:nth-child(even) {
+  @apply bg-muted/20;
+}
+
+/* 滚动条整体风格优化，使其更圆润 */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted));
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
