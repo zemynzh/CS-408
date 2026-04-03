@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { Moon, Sun, Search, Menu } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
@@ -11,6 +11,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
+import SearchDialog from '@/components/search/SearchDialog.vue'
 import AppLogo from './AppLogo.vue'
 import { useTheme } from '@/composables/useTheme'
 import { MODULES } from '@/config/modules'
@@ -40,10 +41,35 @@ function navigateTo(key: ModuleKey) {
 }
 
 const searchQuery = ref('')
+const searchOpen = ref(false)
+const searchInitial = ref('')
 function handleSearch() {
-  if (!searchQuery.value.trim()) return
-  // TODO: 触发全站搜索弹窗
+  searchInitial.value = searchQuery.value.trim()
+  searchOpen.value = true
+  mobileMenuOpen.value = false
 }
+
+function onGlobalKeydown(e: KeyboardEvent) {
+  if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+    e.preventDefault()
+    searchInitial.value = ''
+    searchOpen.value = true
+    mobileMenuOpen.value = false
+  }
+}
+
+function goHome() {
+  router.push({ name: 'home' })
+  mobileMenuOpen.value = false
+}
+
+onMounted(() => {
+  window.addEventListener('keydown', onGlobalKeydown)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', onGlobalKeydown)
+})
 </script>
 
 <template>
@@ -54,7 +80,14 @@ function handleSearch() {
 
       <!-- Logo：左对齐 -->
       <div class="flex-none">
-        <AppLogo />
+        <button
+          type="button"
+          class="inline-flex items-center gap-2 cursor-pointer select-none"
+          aria-label="返回首页"
+          @click="goHome"
+        >
+          <AppLogo />
+        </button>
       </div>
 
       <!-- 桌面端：模块导航居中 -->
@@ -129,7 +162,14 @@ function handleSearch() {
           <SheetContent side="right" class="w-64 p-0">
             <SheetHeader class="px-4 py-4 border-b border-border">
               <SheetTitle class="text-left">
-                <AppLogo />
+                <button
+                  type="button"
+                  class="inline-flex items-center gap-2 cursor-pointer select-none"
+                  aria-label="返回首页"
+                  @click="goHome"
+                >
+                  <AppLogo />
+                </button>
               </SheetTitle>
             </SheetHeader>
 
@@ -164,4 +204,6 @@ function handleSearch() {
       </div>
     </div>
   </header>
+
+  <SearchDialog v-model:open="searchOpen" :initialQuery="searchInitial" />
 </template>

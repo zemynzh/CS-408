@@ -1,13 +1,24 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
-import { useRoute } from 'vue-router'
-import { Loader2, FileWarning } from 'lucide-vue-next'
+import { computed, ref, watch, onMounted, onBeforeUnmount, nextTick } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { Loader2, FileWarning, FileText } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
+import { ScrollArea } from '@/components/ui/scroll-area'
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet'
 import ChoiceItem from '@/components/exam/ChoiceItem.vue'
 import AnswerItem from '@/components/exam/AnswerItem.vue'
 import { useAppStore } from '@/stores/useAppStore'
+import { EXAM_YEARS } from '@/config/exams'
 import type { ChoiceQuestion, AnswerQuestion } from '@/types/exam'
 
 const route = useRoute()
+const router = useRouter()
 const appStore = useAppStore()
 
 const loading = ref(false)
@@ -52,6 +63,44 @@ function setupObserver(ids: number[]) {
   }
 }
 
+function scrollToQuestion(num: number, behavior: ScrollBehavior = 'auto') {
+  const container = scrollEl.value
+  if (!container) return
+  const el = document.getElementById(`q-${num}`)
+  if (!el) return
+  const top = el.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop - 16
+  container.scrollTo({ top, behavior })
+}
+
+const mobileJumpOpen = ref(false)
+const mobileYearOpen = ref(false)
+
+function jumpToYear(y: number) {
+  // 选择年份后跳转到对应路由，并清空 hash，避免错误的题号滚动
+  mobileYearOpen.value = false
+  router.replace({ name: 'exam', params: { year: y }, hash: '' })
+}
+
+function jumpToQuestion(num: number) {
+  // 用 hash 驱动已有 watcher 完成滚动，同时关闭面板
+  mobileJumpOpen.value = false
+  router.replace({ hash: `#q-${num}` })
+}
+
+const mobileChoiceIds = computed(() => {
+  return choiceQuestions.value
+    .map((q) => q.id)
+    .slice()
+    .sort((a, b) => a - b)
+})
+
+const mobileAnswerIds = computed(() => {
+  return answerQuestions.value
+    .map((q) => q.id)
+    .slice()
+    .sort((a, b) => a - b)
+})
+
 async function loadExamData(y: number) {
   observer?.disconnect()
   visibleIds.clear()
@@ -73,6 +122,11 @@ async function loadExamData(y: number) {
       ...answerQuestions.value.map((q) => q.id),
     ]
     setupObserver(ids)
+    const hash = route.hash
+    if (hash?.startsWith('#q-')) {
+      const num = Number(hash.slice(3))
+      if (Number.isFinite(num)) scrollToQuestion(num, 'auto')
+    }
   } catch {
     error.value = `暂未收录 ${y} 年的真题数据。`
     loading.value = false
@@ -103,6 +157,16 @@ watch(
       visibleIds.clear()
       appStore.setActiveQuestion(null)
     }
+  },
+)
+
+watch(
+  () => route.hash,
+  (hash) => {
+    if (!hash?.startsWith('#q-')) return
+    const num = Number(hash.slice(3))
+    if (!Number.isFinite(num)) return
+    scrollToQuestion(num, 'smooth')
   },
 )
 
@@ -165,7 +229,7 @@ onBeforeUnmount(() => {
         v-else
         ref="scrollEl"
         data-exam-scroll
-        class="exam-scroll h-full overflow-y-auto"
+        class="exam-scroll h-full overflow-y-auto pb-24 lg:pb-0"
       >
         <div class="max-w-4xl mx-auto py-8">
           <section class="mb-12">
@@ -198,6 +262,152 @@ onBeforeUnmount(() => {
             END OF EXAM
           </div>
         </div>
+      </div>
+
+      <!-- 移动端：底部年份/题号导航 -->
+      <div class="lg:hidden">
+        <Sheet v-model:open="mobileJumpOpen">
+          <SheetTrigger as-child>
+            <Button
+              v-if="!loading"
+              variant="secondary"
+              class="fixed z-40 bottom-4 left-1/2 -translate-x-1/2 w-[calc(100%-2rem)]"
+              aria-label="打开年份与题号导航"
+            >
+              <FileText class="h-4 w-4 mr-2" />
+              <span class="flex-1 text-left">年份/题号</span>
+              <span class="text-xs text-muted-foreground">
+                {{ year ? `${year} 年` : '选择年份' }}
+              </span>
+            </Button>
+          </SheetTrigger>
+
+          <SheetContent side="bottom" class="p-0">
+            <SheetHeader class="px-4 py-3 border-b border-border">
+              <SheetTitle class="text-left">年份与题号导航</SheetTitle>
+            </SheetHeader>
+
+            <!-- 整个内容区域限定最大高度，可在内部滚动 -->
+            <ScrollArea class="h-[80vh]">
+              <div class="p-4 space-y-4">
+                <div>
+                  <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    选择年份
+                  </div>
+
+                  <button
+                    type="button"
+                    class="w-full h-9 px-3 rounded-md border border-border bg-background text-xs flex items-center justify-between"
+                    @click="mobileYearOpen = !mobileYearOpen"
+                  >
+                    <span class="text-foreground">
+                      {{ year ? `${year} 年` : '请选择年份' }}
+                    </span>
+                    <span class="text-[10px] text-muted-foreground">
+                      {{ mobileYearOpen ? '收起' : '展开' }}
+                    </span>
+                  </button>
+
+                  <Transition
+                    enter-active-class="transition-all duration-150 ease-out"
+                    enter-from-class="opacity-0 -translate-y-1"
+                    enter-to-class="opacity-100 translate-y-0"
+                    leave-active-class="transition-all duration-100 ease-in"
+                    leave-from-class="opacity-100 translate-y-0"
+                    leave-to-class="opacity-0 -translate-y-1"
+                  >
+                    <div
+                      v-if="mobileYearOpen"
+                      class="mt-2 max-h-48 overflow-y-auto rounded-md border border-border bg-card text-xs"
+                    >
+                      <button
+                        v-for="exam in EXAM_YEARS"
+                        :key="exam.year"
+                        type="button"
+                        :class="[
+                          'w-full px-3 py-2 text-left flex items-center justify-between transition-colors',
+                          year === exam.year
+                            ? 'bg-primary/10 text-primary font-semibold'
+                            : 'hover:bg-accent hover:text-accent-foreground',
+                        ]"
+                        @click="jumpToYear(exam.year)"
+                      >
+                        <span>{{ exam.label }}</span>
+                        <span v-if="year === exam.year" class="text-[10px] text-primary">
+                          当前
+                        </span>
+                      </button>
+                    </div>
+                  </Transition>
+                </div>
+
+                <div v-if="year">
+                  <div class="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+                    跳转题号
+                  </div>
+
+                  <div class="space-y-5">
+                    <div v-if="mobileChoiceIds.length">
+                      <div class="flex items-center justify-between mb-2">
+                        <p class="text-xs font-bold text-foreground/50 uppercase tracking-wide">选择题</p>
+                        <p class="text-[11px] text-muted-foreground">
+                          {{ mobileChoiceIds[0] }}–{{ mobileChoiceIds[mobileChoiceIds.length - 1] }}
+                        </p>
+                      </div>
+                      <div class="grid grid-cols-8 gap-1">
+                        <button
+                          v-for="num in mobileChoiceIds"
+                          :key="num"
+                          :class="[
+                            'h-8 rounded text-xs font-medium transition-colors duration-150',
+                            appStore.activeQuestionId === num
+                              ? 'bg-primary text-primary-foreground'
+                              : 'bg-muted text-muted-foreground hover:bg-primary/20 hover:text-primary',
+                          ]"
+                          @click="jumpToQuestion(num)"
+                        >
+                          {{ num }}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div v-if="mobileAnswerIds.length">
+                      <div class="flex items-center justify-between mb-2">
+                        <p class="text-xs font-bold text-foreground/50 uppercase tracking-wide">解答题</p>
+                        <p class="text-[11px] text-muted-foreground">
+                          {{ mobileAnswerIds[0] }}–{{ mobileAnswerIds[mobileAnswerIds.length - 1] }}
+                        </p>
+                      </div>
+                      <div class="grid grid-cols-8 gap-1">
+                        <button
+                          v-for="num in mobileAnswerIds"
+                          :key="num"
+                          :class="[
+                            'h-8 rounded text-xs font-medium transition-colors duration-150',
+                            appStore.activeQuestionId === num
+                              ? 'bg-primary text-primary-foreground'
+                              : 'bg-muted text-muted-foreground hover:bg-primary/20 hover:text-primary',
+                          ]"
+                          @click="jumpToQuestion(num)"
+                        >
+                          {{ num }}
+                        </button>
+                      </div>
+                    </div>
+
+                    <div v-if="!mobileChoiceIds.length && !mobileAnswerIds.length" class="text-sm text-muted-foreground">
+                      当前年份暂无题号数据。
+                    </div>
+                  </div>
+                </div>
+
+                <div v-else class="text-sm text-muted-foreground">
+                  选择年份后即可跳转到对应题号。
+                </div>
+              </div>
+            </ScrollArea>
+          </SheetContent>
+        </Sheet>
       </div>
     </div>
   </div>

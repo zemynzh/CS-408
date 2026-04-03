@@ -3,7 +3,7 @@ import animate from 'tailwindcss-animate'
 import typography from '@tailwindcss/typography'
 
 export default {
-	darkMode: ['class', 'class'],
+	darkMode: ['class'],
 	content: [
 		'./index.html',
 		'./src/**/*.{vue,ts,tsx}',
@@ -109,5 +109,5 @@ export default {
 			},
 		}
 	},
-	plugins: [animate, typography, require("tailwindcss-animate")],
+	plugins: [animate, typography],
 } satisfies Config
