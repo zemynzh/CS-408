@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { ChevronRight, ChevronLeft, ChevronDown, FileText } from 'lucide-vue-next'
+import { ChevronRight, ChevronLeft, ChevronDown, FileText, Sparkles } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { CHAPTERS } from '@/config/chapters'
 import { EXAM_YEARS } from '@/config/exams'
+import { ALGO_SUBJECTS, type AlgoSubjectKey } from '@/config/algorithms'
 import type { Chapter } from '@/config/chapters'
 import type { ModuleKey } from '@/config/modules'
 
@@ -14,6 +15,7 @@ const router = useRouter()
 
 const isKnowledge = computed(() => route.name === 'knowledge')
 const isExam = computed(() => route.name === 'exam')
+const isAlgorithms = computed(() => route.name === 'algorithms')
 
 const currentModule = computed<ModuleKey | null>(() =>
   isKnowledge.value ? (route.params.module as ModuleKey) : null,
@@ -27,6 +29,7 @@ const chapters = computed<Chapter[]>(() => {
 const visible = computed(() => {
   if (isKnowledge.value) return chapters.value.length > 0
   if (isExam.value) return true
+  if (isAlgorithms.value) return true
   return false
 })
 
@@ -66,6 +69,29 @@ function navigateToChapter(chapter: Chapter) {
 
 function navigateToExam(year: number) {
   router.push({ name: 'exam', params: { year } })
+}
+
+const activeAlgoSubject = computed<AlgoSubjectKey | null>(() => {
+  if (!isAlgorithms.value) return null
+  return (route.params.subject as AlgoSubjectKey) ?? null
+})
+
+const activeAlgoId = computed(() => (route.params.algoId as string) ?? '')
+
+const algoSubject = computed(() => {
+  const key = activeAlgoSubject.value
+  if (!key) return null
+  return ALGO_SUBJECTS.find((s) => s.key === key) ?? null
+})
+
+function navigateToAlgoSubject(key: AlgoSubjectKey) {
+  router.push({ name: 'algorithms', params: { subject: key } })
+}
+
+function navigateToAlgo(id: string) {
+  const key = activeAlgoSubject.value
+  if (!key) return
+  router.push({ name: 'algorithms', params: { subject: key, algoId: id } })
 }
 </script>
 
@@ -201,6 +227,92 @@ function navigateToExam(year: number) {
           @click="navigateToExam(exam.year)"
         >
           {{ String(exam.year).slice(2) }}
+        </div>
+      </div>
+    </template>
+
+    <!-- ====== 算法模块：科目 + 算法列表 ====== -->
+    <template v-else-if="isAlgorithms">
+      <ScrollArea v-if="!collapsed" class="flex-1 py-2">
+        <nav class="px-2 space-y-2">
+          <button
+            :class="[
+              'w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-sm text-left mb-2',
+              'transition-colors duration-150',
+              !activeAlgoSubject && !activeAlgoId
+                ? 'bg-primary text-primary-foreground font-medium'
+                : 'text-foreground/80 hover:bg-accent hover:text-accent-foreground',
+            ]"
+            @click="router.push({ name: 'algorithms' })"
+          >
+            <Sparkles class="h-4 w-4" />
+            <span>算法总览</span>
+          </button>
+
+          <div class="text-[11px] font-bold text-muted-foreground uppercase tracking-wider px-2">
+            科目
+          </div>
+          <div class="space-y-0.5">
+            <button
+              v-for="s in ALGO_SUBJECTS"
+              :key="s.key"
+              :class="[
+                'w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-md text-sm text-left',
+                'transition-colors duration-150',
+                activeAlgoSubject === s.key
+                  ? 'bg-accent text-accent-foreground font-medium'
+                  : 'text-foreground/80 hover:bg-accent hover:text-accent-foreground',
+              ]"
+              @click="navigateToAlgoSubject(s.key)"
+            >
+              <span class="truncate leading-snug">{{ s.label }}</span>
+              <span class="text-[10px] text-muted-foreground">{{ s.items.length }}</span>
+            </button>
+          </div>
+
+          <div class="text-[11px] font-bold text-muted-foreground uppercase tracking-wider px-2">
+            算法
+          </div>
+          <div v-if="algoSubject" class="space-y-0.5">
+            <button
+              v-for="a in algoSubject.items"
+              :key="a.id"
+              :class="[
+                'w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-md text-sm text-left',
+                'transition-colors duration-150',
+                activeAlgoId === a.id
+                  ? 'bg-primary text-primary-foreground font-medium'
+                  : 'text-foreground/70 hover:bg-accent hover:text-accent-foreground',
+              ]"
+              @click="navigateToAlgo(a.id)"
+            >
+              <span class="truncate leading-snug">{{ a.name }}</span>
+              <span v-if="a.demoType" class="text-[10px] px-1.5 py-0.5 rounded bg-primary/10 text-primary font-semibold">
+                演示
+              </span>
+            </button>
+          </div>
+          <div v-else class="px-2 text-sm text-muted-foreground">
+            请选择一个科目
+          </div>
+        </nav>
+      </ScrollArea>
+
+      <div v-else class="flex-1 flex flex-col items-center py-3 gap-1.5 overflow-y-auto">
+        <div
+          v-for="s in ALGO_SUBJECTS"
+          :key="s.key"
+          :title="s.label"
+          :class="[
+            'w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold cursor-pointer',
+            'transition-colors duration-150',
+            activeAlgoSubject === s.key
+              ? 'bg-primary text-primary-foreground'
+              : 'bg-muted text-muted-foreground hover:bg-accent hover:text-accent-foreground',
+          ]"
+          @click="navigateToAlgoSubject(s.key)"
+        >
+          {{ s.label.slice(0, 1) }}
         </div>
       </div>
     </template>

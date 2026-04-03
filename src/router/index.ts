@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import KnowledgeView from '@/views/KnowledgeView.vue'
 import ExamView from '@/views/ExamView.vue'
+import AlgorithmsView from '@/views/AlgorithmsView.vue'
 
 const router = createRouter({
   // 使用 hash 模式，兼容 Cloudflare Pages 静态部署
@@ -23,6 +24,11 @@ const router = createRouter({
       path: '/exam/:year?',
       name: 'exam',
       component: ExamView,
+    },
+    {
+      path: '/algorithms/:subject?/:algoId?',
+      name: 'algorithms',
+      component: AlgorithmsView,
     },
   ],
   scrollBehavior(_to, _from, savedPosition) {

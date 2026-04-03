@@ -28,15 +28,15 @@ const activeModule = computed<ModuleKey | null>(() => {
   const name = String(route.name)
   if (name === 'knowledge') return route.params.module as ModuleKey
   if (name === 'exam') return 'past-exams'
+  if (name === 'algorithms') return 'algorithms'
   return null
 })
 
 function navigateTo(key: ModuleKey) {
-  if (key === 'past-exams') {
-    router.push({ name: 'exam' })
-  } else {
-    router.push({ name: 'knowledge', params: { module: key } })
-  }
+  const mod = MODULES.find((m) => m.key === key)
+  if (mod?.type === 'exam') router.push({ name: 'exam' })
+  else if (mod?.type === 'algorithms') router.push({ name: 'algorithms' })
+  else router.push({ name: 'knowledge', params: { module: key } })
   mobileMenuOpen.value = false
 }
 

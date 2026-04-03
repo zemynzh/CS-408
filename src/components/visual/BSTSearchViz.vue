@@ -1,14 +1,64 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import type { BSTSearchVisual, BSTSearchNode } from '@/types/exam'
 
-const props = defineProps<{ visual: BSTSearchVisual }>()
+const props = withDefaults(
+  defineProps<{
+    visual: BSTSearchVisual
+    autoplay?: boolean
+    autoplayIntervalMs?: number
+    hideControls?: boolean
+  }>(),
+  {
+    autoplay: false,
+    autoplayIntervalMs: 1000,
+    hideControls: false,
+  },
+)
 
 const currentStep = ref(0)
 const totalSteps = computed(() => props.visual.steps.length)
 const step = computed(() => props.visual.steps[currentStep.value])
+
+// 自动播放逻辑
+let timer: number | null = null
+function stop() {
+  if (timer) window.clearInterval(timer)
+  timer = null
+}
+
+function start() {
+  stop()
+  currentStep.value = 0
+  timer = window.setInterval(() => {
+    if (currentStep.value >= totalSteps.value - 1) {
+      stop()
+      return
+    }
+    currentStep.value += 1
+  }, props.autoplayIntervalMs)
+}
+
+watch(
+  () => props.autoplay,
+  (v) => {
+    if (v) start()
+    else stop()
+  },
+  { immediate: true },
+)
+
+watch(
+  () => props.visual,
+  () => {
+    currentStep.value = 0
+    if (props.autoplay) start()
+  },
+)
+
+onBeforeUnmount(() => stop())
 
 const nodeMap = computed(() => {
   const m: Record<string, BSTSearchNode> = {}
@@ -109,12 +159,14 @@ function nodeColor(id: string) {
       <span class="text-xs font-bold text-muted-foreground uppercase tracking-wider">BST 中序遍历查最近邻</span>
       <div class="flex items-center gap-2">
         <span class="text-xs text-muted-foreground">步骤 {{ currentStep + 1 }} / {{ totalSteps }}</span>
-        <Button variant="ghost" size="icon" class="h-7 w-7" :disabled="currentStep === 0" @click="currentStep--">
-          <ChevronLeft class="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="icon" class="h-7 w-7" :disabled="currentStep === totalSteps - 1" @click="currentStep++">
-          <ChevronRight class="h-4 w-4" />
-        </Button>
+        <template v-if="!hideControls">
+          <Button variant="ghost" size="icon" class="h-7 w-7" :disabled="currentStep === 0" @click="currentStep--">
+            <ChevronLeft class="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" class="h-7 w-7" :disabled="currentStep === totalSteps - 1" @click="currentStep++">
+            <ChevronRight class="h-4 w-4" />
+          </Button>
+        </template>
       </div>
     </div>
 

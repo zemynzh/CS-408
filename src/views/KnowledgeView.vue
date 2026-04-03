@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Loader2, FileWarning, BookOpen } from 'lucide-vue-next'
+import { Loader2, FileWarning, BookOpen, Sparkles, ArrowRight } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {
@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/sheet'
 import MarkdownContent from '@/components/ui/MarkdownContent.vue'
 import { CHAPTERS, type Chapter } from '@/config/chapters'
-import type { ModuleKey } from '@/config/modules'
+import { MODULES, type ModuleKey } from '@/config/modules'
 
 // 使用 Vite 的 import.meta.glob 批量导入 src/data/knowledge 下的所有 md 文件
 // eager: false 表示按需加载，as: 'raw' 表示以字符串形式读取内容
@@ -34,6 +34,11 @@ const currentModule = computed<ModuleKey | null>(() => {
   const name = String(route.name)
   if (name !== 'knowledge') return null
   return route.params.module as ModuleKey
+})
+
+const currentModuleLabel = computed(() => {
+  const mod = MODULES.find((m) => m.key === currentModule.value)
+  return mod?.label ?? ''
 })
 
 const moduleChapters = computed<Chapter[]>(() => {
@@ -66,10 +71,50 @@ const canPrev = computed(() => activeChapterIndex.value > 0)
 const canNext = computed(() => activeChapterIndex.value >= 0 && activeChapterIndex.value < leafChapters.value.length - 1)
 const mobileChapterOpen = ref(false)
 
+const isModuleIntro = computed(() => Boolean(currentModule.value) && !activeChapterId.value)
+
+const moduleIntro = computed(() => {
+  const key = currentModule.value
+  if (!key) return null
+  const map: Record<ModuleKey, { title: string; points: string[] }> = {
+    'data-structure': {
+      title: '数据结构',
+      points: ['线性表/栈队列/树图', '查找与排序', '典型题型与复杂度分析'],
+    },
+    'computer-organization': {
+      title: '计算机组成原理',
+      points: ['数据表示与运算', '存储系统与 Cache', '指令系统与 CPU', '总线与 I/O'],
+    },
+    'operating-system': {
+      title: '操作系统',
+      points: ['进程与线程、同步互斥', '内存管理与页面置换', '文件系统与设备管理'],
+    },
+    'computer-network': {
+      title: '计算机网络',
+      points: ['分层体系结构', '数据链路/网络/传输层', 'TCP 连接与拥塞控制', 'HTTP/DNS 等应用层'],
+    },
+    'algorithms': {
+      title: '算法',
+      points: ['复杂度分析与常见思想', '贪心/分治/动态规划', '图算法与字符串算法', '高频题型与套路总结'],
+    },
+    'past-exams': {
+      title: '历年真题',
+      points: [],
+    },
+  }
+  return map[key]
+})
+
 function jumpToChapter(id: string) {
   if (!currentModule.value) return
   mobileChapterOpen.value = false
   router.push({ name: 'knowledge', params: { module: currentModule.value, chapterId: id } })
+}
+
+function startFirstChapter() {
+  const first = leafChapters.value[0]?.id
+  if (!first) return
+  jumpToChapter(first)
 }
 
 function jumpToPrev() {
@@ -137,12 +182,84 @@ watch(
       <p class="text-muted-foreground max-w-md">{{ error }}</p>
     </div>
 
+    <div
+      v-else-if="isModuleIntro"
+      ref="scrollEl"
+      class="flex-1 overflow-y-auto px-4 sm:px-6 py-8 sm:py-10 pb-24 md:pb-10"
+    >
+      <div class="max-w-4xl mx-auto">
+        <section class="relative overflow-hidden rounded-2xl border border-border bg-card/30">
+          <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
+          <div class="relative p-6 sm:p-8">
+            <div class="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-3 py-1 text-xs font-semibold text-foreground/80">
+              <Sparkles class="h-3.5 w-3.5" />
+              {{ currentModuleLabel }} · 模块概览
+            </div>
+            <h1 class="mt-4 text-2xl sm:text-3xl font-extrabold tracking-tight leading-snug">
+              {{ moduleIntro?.title || currentModuleLabel }}
+            </h1>
+            <p class="mt-2 text-sm sm:text-base text-muted-foreground leading-relaxed">
+              选择一节开始学习，或先打开章节目录快速定位你要复习的内容。
+            </p>
+
+            <div class="mt-6 flex flex-wrap gap-3">
+              <Button size="lg" class="gap-2" :disabled="!leafChapters.length" @click="startFirstChapter">
+                <BookOpen class="h-4 w-4" />
+                从第一节开始
+              </Button>
+              <Button variant="outline" size="lg" class="gap-2" @click="mobileChapterOpen = true">
+                打开目录
+                <ArrowRight class="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div v-if="moduleIntro?.points?.length" class="mt-6 grid gap-3 sm:grid-cols-2">
+              <div
+                v-for="p in moduleIntro.points"
+                :key="p"
+                class="rounded-lg border border-border bg-background/50 px-4 py-3 text-sm text-muted-foreground"
+              >
+                {{ p }}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="mt-8 rounded-2xl border border-border bg-card/20 p-6">
+          <div class="flex items-center justify-between">
+            <h2 class="text-sm font-bold">章节速览</h2>
+            <div class="text-xs text-muted-foreground">{{ leafChapters.length }} 节</div>
+          </div>
+          <div v-if="leafChapters.length" class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <button
+              v-for="ch in leafChapters.slice(0, 8)"
+              :key="ch.id"
+              type="button"
+              class="flex items-center justify-between gap-3 rounded-lg border border-border bg-background/50 px-4 py-3 text-left transition-colors hover:bg-accent hover:text-accent-foreground"
+              @click="jumpToChapter(ch.id)"
+            >
+              <span class="truncate text-sm font-medium">{{ ch.title }}</span>
+              <span class="text-xs text-muted-foreground">{{ ch.id }}</span>
+            </button>
+          </div>
+          <div v-else class="mt-4 text-sm text-muted-foreground">
+            该模块内容正在完善中，敬请期待。
+          </div>
+          <div v-if="leafChapters.length > 8" class="mt-4">
+            <Button variant="secondary" class="w-full" @click="mobileChapterOpen = true">
+              查看全部章节
+            </Button>
+          </div>
+        </section>
+      </div>
+    </div>
+
     <div v-else-if="!content" class="flex-1 flex flex-col items-center justify-center p-12 text-center">
       <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-6">
         <BookOpen class="h-8 w-8 text-primary" />
       </div>
-      <h3 class="text-lg font-bold mb-2">请选择章节</h3>
-      <p class="text-muted-foreground max-w-md">在左侧边栏选择科目和章节，开启高效复习之旅。</p>
+      <h3 class="text-lg font-bold mb-2">请选择科目</h3>
+      <p class="text-muted-foreground max-w-md">从顶部导航选择一个科目进入模块概览，再开始章节学习。</p>
     </div>
 
     <div v-else ref="scrollEl" class="flex-1 overflow-y-auto px-6 py-10 pb-24 md:pb-10">
