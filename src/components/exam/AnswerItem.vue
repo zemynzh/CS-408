@@ -18,10 +18,10 @@ const revealed = ref(false)
 </script>
 
 <template>
-  <div :id="`q-${question.id}`" class="p-6 transition-colors hover:bg-accent/5">
+  <div :id="`q-${question.id}`" class="relative p-4 sm:p-6 transition-colors hover:bg-accent/5">
     <!-- 题号 + 科目 -->
     <div class="flex items-center gap-3 mb-4">
-      <span class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-sm shrink-0">
+      <span class="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs sm:text-sm shrink-0">
         {{ question.id }}
       </span>
       <span :class="['px-2 py-0.5 rounded text-xs font-semibold', SUBJECT_BADGE_COLOR[question.subject] ?? 'bg-muted text-muted-foreground']">
@@ -31,11 +31,11 @@ const revealed = ref(false)
     </div>
 
     <!-- 题干 -->
-    <MarkdownContent :content="question.question" class="mb-6 font-medium text-foreground/90" />
+    <MarkdownContent :content="question.question" class="mb-4 sm:mb-6 font-medium text-foreground/90" />
 
-    <!-- 操作栏 -->
-    <div class="flex items-center gap-3">
-      <Button variant="outline" size="sm" @click="revealed = !revealed">
+    <!-- 操作栏：固定在卡片右上角 -->
+    <div class="absolute top-3 right-3 sm:top-4 sm:right-4">
+      <Button variant="outline" size="sm" class="h-8" @click="revealed = !revealed">
         {{ revealed ? '隐藏解析' : '查看答案与解析' }}
       </Button>
     </div>

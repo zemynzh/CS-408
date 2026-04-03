@@ -40,17 +40,17 @@ function goToExams() {
 
 <template>
   <div class="h-full overflow-y-auto bg-background">
-    <div class="max-w-6xl mx-auto px-6 py-10">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
       <section class="relative overflow-hidden rounded-2xl border border-border bg-card/30">
         <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent" />
-        <div class="relative p-8 md:p-12">
+        <div class="relative p-6 md:p-12">
           <div class="flex items-start justify-between gap-6">
             <div class="max-w-2xl">
               <div class="inline-flex items-center gap-2 rounded-full border border-border bg-background/60 px-3 py-1 text-xs font-semibold text-foreground/80">
                 <Sparkles class="h-3.5 w-3.5" />
                 408 复习助手 · 知识点 + 真题一体化
               </div>
-              <h1 class="mt-4 text-3xl md:text-4xl font-extrabold tracking-tight">
+              <h1 class="mt-4 text-3xl md:text-4xl max-[360px]:text-2xl font-extrabold tracking-tight">
                 用更清晰的结构，系统化复习 408
               </h1>
               <p class="mt-3 text-sm md:text-base text-muted-foreground leading-relaxed">
@@ -113,7 +113,7 @@ function goToExams() {
       </section>
 
       <section class="mt-10 grid gap-4 md:grid-cols-3">
-        <div class="rounded-xl border border-border bg-card/30 p-6">
+        <div class="rounded-xl border border-border bg-card/30 p-5 sm:p-6">
           <div class="flex items-center gap-2 text-sm font-semibold">
             <Workflow class="h-4 w-4 text-primary" />
             结构化章节
@@ -122,7 +122,7 @@ function goToExams() {
             按科目与章/节组织，和侧边栏导航保持一致，减少来回翻找成本。
           </p>
         </div>
-        <div class="rounded-xl border border-border bg-card/30 p-6">
+        <div class="rounded-xl border border-border bg-card/30 p-5 sm:p-6">
           <div class="flex items-center gap-2 text-sm font-semibold">
             <Search class="h-4 w-4 text-primary" />
             更顺的定位
@@ -131,7 +131,7 @@ function goToExams() {
             真题页面支持滚动高亮题号与右侧跳题（题号导航），定位更快。
           </p>
         </div>
-        <div class="rounded-xl border border-border bg-card/30 p-6">
+        <div class="rounded-xl border border-border bg-card/30 p-5 sm:p-6">
           <div class="flex items-center gap-2 text-sm font-semibold">
             <BookOpen class="h-4 w-4 text-primary" />
             Markdown 排版
@@ -142,7 +142,7 @@ function goToExams() {
         </div>
       </section>
 
-      <section class="mt-10 rounded-2xl border border-border bg-card/20 p-8">
+      <section class="mt-10 rounded-2xl border border-border bg-card/20 p-6 sm:p-8">
         <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
             <h2 class="text-lg font-bold">从一个章节开始，保持节奏</h2>

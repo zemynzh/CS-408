@@ -179,13 +179,13 @@ onBeforeUnmount(() => {
 <template>
   <div class="h-full flex flex-col overflow-hidden bg-background">
     <!-- 头部 -->
-    <header v-if="year" class="px-6 py-4 border-b border-border bg-background/50 backdrop-blur shrink-0">
-      <div class="flex items-center justify-between">
+    <header v-if="year" class="px-4 py-3 sm:px-6 sm:py-4 border-b border-border bg-background/50 backdrop-blur shrink-0">
+      <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 class="text-xl font-bold">{{ year }} 年全国硕士研究生入学统一考试</h1>
-          <p class="text-sm text-muted-foreground mt-1">计算机学科专业基础（408）</p>
+          <h1 class="text-base sm:text-xl font-bold leading-snug">{{ year }} 年全国硕士研究生入学统一考试</h1>
+          <p class="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">计算机学科专业基础（408）</p>
         </div>
-        <div class="flex gap-4">
+        <div class="hidden sm:flex gap-4">
           <div class="text-right">
             <div class="text-xs text-muted-foreground font-semibold uppercase tracking-wider">选择题</div>
             <div class="text-lg font-bold">{{ choiceQuestions.length }} 题</div>
@@ -194,6 +194,14 @@ onBeforeUnmount(() => {
             <div class="text-xs text-muted-foreground font-semibold uppercase tracking-wider">解答题</div>
             <div class="text-lg font-bold">{{ answerQuestions.length }} 题</div>
           </div>
+        </div>
+        <div class="sm:hidden flex items-center gap-2">
+          <span class="px-2 py-1 rounded bg-muted text-[11px] text-muted-foreground">
+            选择题 {{ choiceQuestions.length }} 题
+          </span>
+          <span class="px-2 py-1 rounded bg-muted text-[11px] text-muted-foreground">
+            解答题 {{ answerQuestions.length }} 题
+          </span>
         </div>
       </div>
     </header>
@@ -232,12 +240,14 @@ onBeforeUnmount(() => {
         class="exam-scroll h-full overflow-y-auto pb-24 lg:pb-0"
       >
         <div class="max-w-4xl mx-auto py-8">
-          <section class="mb-12">
-            <div class="px-6 mb-6">
-              <h2 class="text-lg font-bold flex items-center gap-2">
-                <span class="w-1 h-6 bg-primary rounded-full"></span>
+          <section class="mb-10 sm:mb-12">
+            <div class="px-4 sm:px-6 mb-4 sm:mb-6">
+              <h2 class="text-base sm:text-lg font-bold flex items-center gap-1.5 sm:gap-2 leading-snug">
+                <span class="w-1 h-4 sm:h-6 bg-primary rounded-full"></span>
                 一、单项选择题
-                <span class="text-sm font-normal text-muted-foreground ml-2">（第 1–40 题，每题 2 分，共 80 分）</span>
+                <span class="text-xs sm:text-sm font-normal text-muted-foreground ml-2">
+                  （第 1–40 题，每题 2 分，共 80 分）
+                </span>
               </h2>
             </div>
             <div class="bg-card border border-border/50 rounded-xl overflow-hidden divide-y divide-border/50">
@@ -245,12 +255,14 @@ onBeforeUnmount(() => {
             </div>
           </section>
 
-          <section v-if="answerQuestions.length" class="mb-12">
-            <div class="px-6 mb-6">
-              <h2 class="text-lg font-bold flex items-center gap-2">
-                <span class="w-1 h-6 bg-primary rounded-full"></span>
+          <section v-if="answerQuestions.length" class="mb-10 sm:mb-12">
+            <div class="px-4 sm:px-6 mb-4 sm:mb-6">
+              <h2 class="text-base sm:text-lg font-bold flex items-center gap-1.5 sm:gap-2 leading-snug">
+                <span class="w-1 h-4 sm:h-6 bg-primary rounded-full"></span>
                 二、综合应用题
-                <span class="text-sm font-normal text-muted-foreground ml-2">（第 41–47 题，共 70 分）</span>
+                <span class="text-xs sm:text-sm font-normal text-muted-foreground ml-2">
+                  （第 41–47 题，共 70 分）
+                </span>
               </h2>
             </div>
             <div class="bg-card border border-border/50 rounded-xl overflow-hidden divide-y divide-border/50">
@@ -258,7 +270,7 @@ onBeforeUnmount(() => {
             </div>
           </section>
 
-          <div class="h-20 flex items-center justify-center text-xs text-muted-foreground uppercase tracking-widest italic">
+          <div class="h-16 sm:h-20 flex items-center justify-center text-[10px] sm:text-xs text-muted-foreground uppercase tracking-widest italic">
             END OF EXAM
           </div>
         </div>
